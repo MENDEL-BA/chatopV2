@@ -2,14 +2,18 @@ package com.techpal.sn.controllers;
 
 
 import com.techpal.sn.dto.PatientDto;
+import com.techpal.sn.models.User;
 import com.techpal.sn.repository.PatientRepository;
 import com.techpal.sn.security.services.PatientService;
+import com.techpal.sn.security.services.UserDetailsServiceInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -21,6 +25,8 @@ public class PatientController {
     private final PatientService patientService;
 
     private final PatientRepository patientRepository;
+
+    private final UserDetailsServiceInfo userDetailsServiceInfo;
 
     @PostMapping("/patient")
     public PatientDto createNewPatient(@RequestBody PatientDto patientDto) {
@@ -49,5 +55,13 @@ public class PatientController {
     public PatientDto getAPatientByUid(@RequestParam String uidPatient) {
 
         return PatientDto.parse(patientService.getPatientByExternalId(uidPatient));
+    }
+
+    @GetMapping("/getPatientForMedecin")
+    @PreAuthorize("hasRole('ROLE_MEDECIN')")
+    public List<PatientDto> getPatientsForMedecin() {
+        Optional<User> user = userDetailsServiceInfo.getUser();
+
+        return PatientDto.parseAll(patientService.getPatientForMedecin(user.get().getLinkedMeta().getExternalId()));
     }
 }

@@ -3,10 +3,19 @@ package com.techpal.sn.serviceImpl;
 import com.techpal.sn.dto.PatientDto;
 import com.techpal.sn.models.Meta;
 import com.techpal.sn.models.Patient;
+import com.techpal.sn.models.RendezVous;
+import com.techpal.sn.models.User;
+import com.techpal.sn.payload.response.MessageResponse;
 import com.techpal.sn.repository.PatientRepository;
+import com.techpal.sn.repository.RendezVousRepository;
+import com.techpal.sn.repository.UserRepository;
 import com.techpal.sn.security.services.MetaService;
 import com.techpal.sn.security.services.PatientService;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -15,9 +24,15 @@ public class PatientServiceImpl implements PatientService {
 
     private final MetaService metaservice;
 
-    public PatientServiceImpl(PatientRepository patientRepository, MetaService metaservice) {
+    private final UserRepository userRepository;
+
+    private final RendezVousRepository rendezVousRepository;
+
+    public PatientServiceImpl(PatientRepository patientRepository, MetaService metaservice, UserRepository userRepository, RendezVousRepository rendezVousRepository) {
         this.patientRepository = patientRepository;
         this.metaservice = metaservice;
+        this.userRepository = userRepository;
+        this.rendezVousRepository = rendezVousRepository;
     }
 
     @Override
@@ -103,6 +118,36 @@ public class PatientServiceImpl implements PatientService {
         }
 
         return patientRepository.findByLinkedMeta(meta);
+    }
+
+    @Override
+    public List<Patient> getPatientForMedecin(String uidUser) {
+
+        List<Patient> patients = new ArrayList<>();
+        if (uidUser == null) {
+            new MessageResponse("Veuillez verifier l'utilisateur!");
+        }
+
+        User user = userRepository.findByLinkedMeta(metaservice.findByExternalId(uidUser));
+
+        if (user == null) {
+            new MessageResponse("Veuillez verifier l'utilisateur existe!");
+        }
+
+        List<RendezVous> rendezVousForMedecin = rendezVousRepository.findAllByUser(user);
+
+        if (Objects.isNull(rendezVousForMedecin) || rendezVousForMedecin.isEmpty()) {
+            new MessageResponse("Vous n'avez pas encore de rendez-vous, donc pas de patient!");
+        }
+
+        for (RendezVous patient: rendezVousForMedecin) {
+            if (patient == null) {
+                new MessageResponse("Vous n'avez pas encore de rendez-vous, donc pas de patient!");
+            }
+            patients.add(patient.getPatient());
+        }
+
+        return patients;
     }
 
 

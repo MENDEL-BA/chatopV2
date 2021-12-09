@@ -8,14 +8,23 @@ public class JwtResponse {
 	private Long id;
 	private String username;
 	private String email;
+	private String uidUser;
 	private List<String> roles;
 
-	public JwtResponse( Long id, String username, String email, List<String> roles) {
-		//this.token = accessToken;
+	public JwtResponse( Long id, String uidUser, String username, String email, List<String> roles) {
 		this.id = id;
+		this.uidUser = uidUser;
 		this.username = username;
 		this.email = email;
 		this.roles = roles;
+	}
+
+	public String getUidUser() {
+		return uidUser;
+	}
+
+	public void setUidUser(String uidUser) {
+		this.uidUser = uidUser;
 	}
 
 	public String getAccessToken() {

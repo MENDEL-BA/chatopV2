@@ -71,6 +71,7 @@ public class AuthController {
 		UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
 
 		return ResponseEntity.ok(new JwtResponse(userDetails.getId(),
+												 userDetails.getUidUser(),
 												 userDetails.getUsername(),
 												 userDetails.getEmail(),
 												 roles));
