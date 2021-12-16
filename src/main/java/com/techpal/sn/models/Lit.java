@@ -1,5 +1,6 @@
 package com.techpal.sn.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,19 +26,24 @@ public class Lit {
     private String numero;
 
     @Column(name = "etat")
-    private Boolean etat;
+    private boolean etat;
 
-    @JsonIgnoreProperties(value = { "factures", "rendezVous", "chambres", "lit", "consultation" }, allowSetters = true)
-    @OneToOne
-    @JoinColumn(unique = true)
+    //@JsonIgnoreProperties(value = { "factures", "rendezVous", "chambres", "lit", "consultation" }, allowSetters = true)
+    @ManyToOne
+    //@JoinColumn(unique = true)
     private Patient patient;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "lits" }, allowSetters = true)
-    private Hospitalisation hospitalisation;
+//    @ManyToOne
+//    @JsonIgnoreProperties(value = { "lits" }, allowSetters = true)
+//    private Hospitalisation hospitalisation;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "lits", "patient" }, allowSetters = true)
-    private Chambre chambre;
+//    @ManyToOne
+//    @JsonIgnoreProperties(value = { "lits", "patient" }, allowSetters = true)
+//    private Chambre chambre;
+
+    @JsonIgnore
+    @JoinColumn(name = "linked_meta", referencedColumnName = "id", nullable = false)
+    @OneToOne(optional = false)
+    private Meta linkedMeta;
 
 }

@@ -65,6 +65,10 @@ public class AuthController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+		if (auth == null) {
+			new MessageResponse("Veuillez vous authentifier d'abord!");
+		}
+
 		List<String> roles = auth.getAuthorities().stream()
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());

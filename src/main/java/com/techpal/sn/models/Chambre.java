@@ -40,15 +40,15 @@ public class Chambre {
 
     @NotNull
     @Column(name = "type_chambre", nullable = false)
-    private String typeChambre;
-
-    @OneToMany(mappedBy = "chambre")
-    @JsonIgnoreProperties(value = { "patient", "hospitalisation", "chambre" }, allowSetters = true)
-    private Set<Lit> lits = new HashSet<>();
+    private String typeChambre; // Sera type enum
 
     @ManyToOne
-    @JsonIgnoreProperties(value = { "factures", "rendezVous", "chambres", "lit", "consultation" }, allowSetters = true)
-    private Patient patient;
+    //@JsonIgnoreProperties(value = { "patient", "hospitalisation", "chambre" }, allowSetters = true)
+    private Lit lits;
+
+//    @ManyToOne
+//    @JsonIgnoreProperties(value = { "factures", "rendezVous", "chambres", "lit", "consultation" }, allowSetters = true)
+//    private Patient patient;
 
     @JsonIgnore
     @JoinColumn(name = "linked_meta", referencedColumnName = "id", nullable = false)

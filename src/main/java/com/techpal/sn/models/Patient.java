@@ -69,18 +69,21 @@ public class Patient {
     @JsonIgnoreProperties(value = { "patient" }, allowSetters = true)
     private Set<RendezVous> rendezVous = new HashSet<>();
 
-    @OneToMany(mappedBy = "patient")
+    /*@OneToMany(mappedBy = "patient")
     @JsonIgnoreProperties(value = { "lits", "patient" }, allowSetters = true)
-    private Set<Chambre> chambres = new HashSet<>();
+    private Set<Chambre> chambres = new HashSet<>();*/
 
     @OneToMany(mappedBy = "patient")
     @JsonIgnoreProperties(value = { "patient" }, allowSetters = true)
     private Set<Consultation> consultations = new HashSet<>();
 
+    @OneToMany(mappedBy = "patient")
+    @JsonIgnoreProperties(value = { "patient" }, allowSetters = true)
+    private Set<Lit> lits = new HashSet<>();
 
-    @JsonIgnoreProperties(value = { "patient", "hospitalisation", "chambre" }, allowSetters = true)
+    /*@JsonIgnoreProperties(value = { "patient", "hospitalisation", "chambre" }, allowSetters = true)
     @OneToOne(mappedBy = "patient")
-    private Lit lit;
+    private Lit lit;*/
 
     @JsonIgnore
     @JoinColumn(name = "linked_meta", referencedColumnName = "id", nullable = false)

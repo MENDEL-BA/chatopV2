@@ -1,5 +1,6 @@
 package com.techpal.sn.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.EqualsAndHashCode;
@@ -56,8 +57,13 @@ public class Hospitalisation {
     @Column(name = "cause_deces")
     private String causeDeces;
 
-    @OneToMany(mappedBy = "hospitalisation")
-    @JsonIgnoreProperties(value = { "patient", "hospitalisation", "chambre" }, allowSetters = true)
-    private Set<Lit> lits = new HashSet<>();
+    @ManyToOne
+    //@JsonIgnoreProperties(value = { "patient", "chambre" }, allowSetters = true)
+    private Lit lits;
+
+    @JsonIgnore
+    @JoinColumn(name = "linked_meta", referencedColumnName = "id", nullable = false)
+    @OneToOne(optional = false)
+    private Meta linkedMeta;
 
 }
