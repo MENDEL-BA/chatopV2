@@ -1,0 +1,60 @@
+stages:
+  - packageging
+  - integrationtest #integration des tests sera fait plus tard
+  - build_docker_image
+  - run_container
+
+default:
+  image: 2.7.7-jdk-15.0.2
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+
+###################################
+#I will run tests here after i do it
+###################################
+
+build docker image:
+  image: docker:latest
+  stage: build_docker_image
+  inherit:
+    default: false
+    variables: false
+  services:
+    - docker:dind
+  script:
+    - docker build -t ccyprus/personcrud .
+    - docker save diery/gesclinic > gesclinic.tar
+    - docker login -u diery -p $DOCKER_HUB_PASSWORD
+    - docker push diery/gesclinic
+  artifacts:
+    paths:
+      - gesclinic.tar
+
+# Run container
+run personcrud image:
+  image: docker:latest
+  stage: run_container
+  inherit:
+    default: false
+    variables: false
+  before_script:
+    - apk add --update curl && rm -rf /var/cache/apk/*
+  services:
+    - docker:dind
+  script:
+    # run mysql docker image
+    #- docker load < personcrud.tar
+    #- docker network create person-network
+    #- docker run --name person-mysql-db --network="person-network" -e MYSQL_DATABASE=$MYSQL_DB -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PWD -e MYSQL_USER=$MYSQL_USER -e MYSQL_PASSWORD=$MYSQL_USER_PWD -d mysql:5.6
+    #- docker run --name personcrud-container -p 8086:8086 -d --network="person-network" ccyprus/personcrud
+    #- sleep 30
+   # - docker logs personcrud-container
+    #- 'curl -v -H "Content-Type:application/json" -d @./requests/post_new_user.json "http://docker:8086/users" | grep -q "status: 200"'
+    #    - 'curl -v -H "Content-Type:application/json" -d @./requests/post_request.json http://docker:8086/persons'
+    #    - curl -v "http://docker:8086/persons"
+    #    - 'curl -v -H "Content-Type:application/json" -d @./requests/put_request.json -X PUT http://docker:8086/persons/1'
+    #    - curl -v "http://docker:8086/persons/1"
+    #    - 'curl -v -H "Content-Type:application/json" -X DELETE http://docker:8086/persons/1'
+    #    - curl -v "http://docker:8086/persons"
+   # - docker logs personcrud-container

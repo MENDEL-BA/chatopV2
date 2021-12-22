@@ -66,4 +66,8 @@ public class Hospitalisation {
     @OneToOne(optional = false)
     private Meta linkedMeta;
 
+    @ManyToOne
+    @JsonIgnoreProperties()
+    private User user;
+
 }

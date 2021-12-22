@@ -1,11 +1,13 @@
 package com.techpal.sn.dto;
 
 import com.techpal.sn.models.Hospitalisation;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HospitalisationDto {
+public class HospitalisationDto implements Serializable {
 
     private LocalDate dateAdmission;
 
@@ -31,6 +33,15 @@ public class HospitalisationDto {
 
     private String uidPatient;
 
+    private String infosPatient;
+
+    private String numeroChambre;
+
+    private String numeroLit;
+
+    public HospitalisationDto() {
+    }
+
     public HospitalisationDto(Hospitalisation hospitalisation) {
         this.dateAdmission = hospitalisation.getDateAdmission();
         this.motifAdmission = hospitalisation.getMotifAdmission();
@@ -43,6 +54,27 @@ public class HospitalisationDto {
         this.causeDeces = hospitalisation.getCauseDeces();
         this.uidHospitalisation = hospitalisation.getLinkedMeta().getExternalId();
         this.uidLit = hospitalisation.getLits().getLinkedMeta().getExternalId();
+        this.infosPatient = hospitalisation.getLits().getPatient().getNomPatient().concat(" ".concat(hospitalisation.getLits().getPatient().getPrenomPatient()));
+
+        //TODO: Mauvaise pratique, à refaire apres presentaion
+        this.numeroLit = hospitalisation.getLits().getNumero();
+        //this.numeroChambre = hospitalisation.getLits().getPatient().getc;
+    }
+
+    public String getNumeroChambre() {
+        return numeroChambre;
+    }
+
+    public void setNumeroChambre(String numeroChambre) {
+        this.numeroChambre = numeroChambre;
+    }
+
+    public String getNumeroLit() {
+        return numeroLit;
+    }
+
+    public void setNumeroLit(String numeroLit) {
+        this.numeroLit = numeroLit;
     }
 
     public LocalDate getDateAdmission() {
@@ -141,11 +173,31 @@ public class HospitalisationDto {
         this.uidPatient = uidPatient;
     }
 
+    public String getInfosPatient() {
+        return infosPatient;
+    }
+
+    public void setInfosPatient(String infosPatient) {
+        this.infosPatient = infosPatient;
+    }
+
     public static HospitalisationDto parse(Hospitalisation hospitalisation){
         return new HospitalisationDto(hospitalisation);
     }
 
     public static List<HospitalisationDto> parseAll(List<Hospitalisation> hospitalisations){
         return hospitalisations.stream().map(HospitalisationDto::parse).collect(Collectors.toList());
+    }
+
+    @Override
+    public String toString() {
+        return "HospitalisationDto{" +
+                "motifAdmission='" + motifAdmission + '\'' +
+                ", infosAccompagnant='" + infosAccompagnant + '\'' +
+                ", uidLit='" + uidLit + '\'' +
+                ", uidPatient='" + uidPatient + '\'' +
+                ", infosPatient='" + infosPatient + '\'' +
+                ", numeroLit='" + numeroLit + '\'' +
+                '}';
     }
 }

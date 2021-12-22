@@ -2,22 +2,17 @@ package com.techpal.sn.serviceImpl;
 
 import com.techpal.sn.dto.HospitalisationDto;
 import com.techpal.sn.dto.LitDto;
-import com.techpal.sn.models.Hospitalisation;
-import com.techpal.sn.models.Lit;
-import com.techpal.sn.models.Meta;
-import com.techpal.sn.models.Patient;
+import com.techpal.sn.models.*;
 import com.techpal.sn.payload.response.MessageResponse;
 import com.techpal.sn.repository.HospitalisationRepository;
 import com.techpal.sn.repository.LitRepository;
-import com.techpal.sn.security.services.HospitalisationService;
-import com.techpal.sn.security.services.LitService;
-import com.techpal.sn.security.services.MetaService;
-import com.techpal.sn.security.services.PatientService;
+import com.techpal.sn.security.services.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HospitalisationServiceImpl implements HospitalisationService {
@@ -32,17 +27,22 @@ public class HospitalisationServiceImpl implements HospitalisationService {
 
     private final PatientService patientService;
 
-    public HospitalisationServiceImpl(HospitalisationRepository hospitalisationRepository, LitRepository litRepository, MetaService metaService, LitService litService, PatientService patientService) {
+    private final UserDetailsServiceInfo userDetailsServiceInfo;
+
+    public HospitalisationServiceImpl(HospitalisationRepository hospitalisationRepository, LitRepository litRepository, MetaService metaService, LitService litService, PatientService patientService, UserDetailsServiceInfo userDetailsServiceInfo) {
         this.hospitalisationRepository = hospitalisationRepository;
         this.litRepository = litRepository;
         this.metaService = metaService;
         this.litService = litService;
         this.patientService = patientService;
+        this.userDetailsServiceInfo = userDetailsServiceInfo;
     }
 
 
     @Override
     public Hospitalisation createHospitalisation(HospitalisationDto hospitalisationDto) {
+
+        System.out.println("Les infos "+hospitalisationDto.toString());
 
         if (hospitalisationDto == null || hospitalisationDto.getUidLit() == null) {
             new MessageResponse("Veuillez verifier les donnees");
@@ -61,26 +61,28 @@ public class HospitalisationServiceImpl implements HospitalisationService {
             new MessageResponse("Le patient est introuvable");
         }
 
-        Lit lit = litService.getLitByLinkedMeta(metaService.findByExternalId(hospitalisationDto.getMotifSortie()));
+        Lit lit = litService.getLitByLinkedMeta(metaService.findByExternalId(hospitalisationDto.getUidLit()));
 
         if (lit == null) {
-            new MessageResponse("Le lit n'esst pas repertorie, veuillez verifie");
+            new MessageResponse("Le lit n'est pas repertorie, veuillez verifie");
         }
 
         Hospitalisation hospitalisation = new Hospitalisation();
-
-        hospitalisation.setDateAdmission(hospitalisationDto.getDateAdmission());
+        Optional<User> medecin = userDetailsServiceInfo.getUser();
+        hospitalisation.setDateAdmission(LocalDate.now());
         hospitalisation.setDateTransfert(hospitalisationDto.getDateTransfert());
-        hospitalisation.setInfosAccompagnat(hospitalisation.getInfosAccompagnat());
+        hospitalisation.setInfosAccompagnat(hospitalisationDto.getInfosAccompagnant());
         hospitalisation.setLinkedMeta(metaService.createNew(Hospitalisation.class.getName()));
         hospitalisation.setMotifAdmission(hospitalisationDto.getMotifAdmission());
         hospitalisation.setLits(lit);
-        litDto.setNumero(lit.getNumero());
-        litDto.setEtat(true);
-        litDto.setUidPatient(patient.getLinkedMeta().getExternalId());
+        hospitalisation.setUser(medecin.get());
+        //TODO: t'es con merde, evidemment que le lit est null, persiste d'abord
+        //litDto.setNumero(lit.getNumero());
+        lit.setEtat(false);
+        lit.setPatient(patient);
 
-        litService.updateLit(litDto);
-
+        litRepository.saveAndFlush(lit);
+        //litService.updateLit(litDto);
 
         return hospitalisationRepository.saveAndFlush(hospitalisation);
     }
@@ -114,6 +116,16 @@ public class HospitalisationServiceImpl implements HospitalisationService {
         }
 
         return hospitalisationsForPatient;
+    }
+
+    @Override
+    public List<Hospitalisation> getHospitalisationForMedecin(User user) {
+
+        if (user == null) {
+            new MessageResponse("Un des parametres est null");
+        }
+
+        return hospitalisationRepository.findAllByUser(user);
     }
 
     @Override

@@ -26,7 +26,7 @@ public class LitController {
     @RequestMapping(value = "/lits", method = RequestMethod.GET)
     @PreAuthorize("hasAnyRole('ROLE_MEDECIN', 'ROLE_SECRETAIRE')")
     public List<LitDto> getLits(){
-        return LitDto.parseAll(litRepository.findLitsByEtatIsFalse());
+        return LitDto.parseAll(litRepository.findLitsByEtatIsTrue());
     }
 
     @RequestMapping(value = "/lits", method = RequestMethod.POST)

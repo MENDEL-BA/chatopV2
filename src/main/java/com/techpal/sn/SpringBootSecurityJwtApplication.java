@@ -15,7 +15,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.time.LocalDate;
 
 @SpringBootApplication
-public class SpringBootSecurityJwtApplication implements CommandLineRunner {
+//public class SpringBootSecurityJwtApplication implements CommandLineRunner {
+public class SpringBootSecurityJwtApplication {
 
 	private final MetaService metaService;
 
@@ -39,7 +40,7 @@ public class SpringBootSecurityJwtApplication implements CommandLineRunner {
 		SpringApplication.run(SpringBootSecurityJwtApplication.class, args);
 	}
 
-	@Override
+	/*@Override
 	public void run(String... args) throws Exception {
 		Chambre chambre = new Chambre();
 		Lit lit = new Lit();
@@ -89,5 +90,5 @@ public class SpringBootSecurityJwtApplication implements CommandLineRunner {
 
 		Hospitalisation hospitalisationSave = hospitalisationRepository.saveAndFlush(hospitalisation);
 
-	}
+	}*/
 }
