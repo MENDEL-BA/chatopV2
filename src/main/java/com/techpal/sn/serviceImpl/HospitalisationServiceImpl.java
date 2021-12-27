@@ -128,6 +128,11 @@ public class HospitalisationServiceImpl implements HospitalisationService {
         return hospitalisationRepository.findAllByUser(user);
     }
 
+    /*
+    Cette fonction ne supprimme pas une hospitalisation,
+    elle permet de faire sortir un patient de l'hospitalisation et
+    libére le lit
+     */
     @Override
     public Hospitalisation removeHospitalisation(HospitalisationDto hospitalisationDto) {
 

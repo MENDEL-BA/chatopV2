@@ -18,5 +18,5 @@ public interface LitRepository extends JpaRepository<Lit, Long> {
 
     List<Lit> findByPatient(Patient patient);
 
-    List<Lit> findLitsByEtatIsTrue();
+    List<Lit> findLitsByEtatIsFalse();
 }

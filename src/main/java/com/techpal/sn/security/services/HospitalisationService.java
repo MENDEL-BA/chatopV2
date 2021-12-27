@@ -15,7 +15,6 @@ public interface HospitalisationService {
 
     List<Hospitalisation> getHospitalisationForPatient(String uidLit);
 
-
     List<Hospitalisation> getHospitalisationForMedecin(User user);
 
     Hospitalisation removeHospitalisation(HospitalisationDto hospitalisationDto);

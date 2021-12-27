@@ -40,6 +40,17 @@ public class HospitalisationController {
         return HospitalisationDto.parse(hospitalisationService.createHospitalisation(hospitalisationDto));
     }
 
+
+    @RequestMapping(value = "/removeHospitalisation", method = RequestMethod.PUT)
+    @PreAuthorize("hasAnyRole('ROLE_MEDECIN', 'ROLE_SECRETAIRE')")
+    public HospitalisationDto removeHospitalisation(@RequestBody HospitalisationDto hospitalisationDto) {
+        if (hospitalisationDto == null) {
+            throw new IllegalStateException("Un des parametres est null");
+        }
+
+        return HospitalisationDto.parse(hospitalisationService.removeHospitalisation(hospitalisationDto));
+    }
+
     @RequestMapping(value = "/hospitalisations", method = RequestMethod.GET)
     @PreAuthorize("hasAnyRole('ROLE_MEDECIN', 'ROLE_SECRETAIRE')")
     public List<HospitalisationDto> getAllHospitalisations() {
