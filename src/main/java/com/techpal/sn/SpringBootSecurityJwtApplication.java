@@ -11,6 +11,7 @@ import com.techpal.sn.security.services.PatientService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
 
@@ -18,23 +19,38 @@ import java.time.LocalDate;
 //public class SpringBootSecurityJwtApplication implements CommandLineRunner {
 public class SpringBootSecurityJwtApplication {
 
-	private final MetaService metaService;
+//	private final MetaService metaService;
+//
+//	private final PatientService patientService;
+//
+//	private final LitRepository litRepository;
+//
+//	private final ChambreRepository chambreRepository;
+//
+//	private final HospitalisationRepository hospitalisationRepository;
+//
+//	public SpringBootSecurityJwtApplication(MetaService metaService, PatientService patientService, LitRepository litRepository, ChambreRepository chambreRepository, HospitalisationRepository hospitalisationRepository) {
+//		this.metaService = metaService;
+//		this.patientService = patientService;
+//		this.litRepository = litRepository;
+//		this.chambreRepository = chambreRepository;
+//		this.hospitalisationRepository = hospitalisationRepository;
+//	}
 
-	private final PatientService patientService;
-
-	private final LitRepository litRepository;
-
-	private final ChambreRepository chambreRepository;
-
-	private final HospitalisationRepository hospitalisationRepository;
-
-	public SpringBootSecurityJwtApplication(MetaService metaService, PatientService patientService, LitRepository litRepository, ChambreRepository chambreRepository, HospitalisationRepository hospitalisationRepository) {
-		this.metaService = metaService;
-		this.patientService = patientService;
-		this.litRepository = litRepository;
-		this.chambreRepository = chambreRepository;
-		this.hospitalisationRepository = hospitalisationRepository;
-	}
+//	@Bean
+//	public CommandLineRunner websocketDemo() {
+//		return (args) -> {
+//			while (true) {
+//				try {
+//					Thread.sleep(3*1000); // Each 3 sec.
+//					progress.put("num1", randomWithRange(0, 100));
+//					progress.put("num2", randomWithRange(0, 100));
+//					messagingTemplate.convertAndSend("/topic/progress", this.progress);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		};
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootSecurityJwtApplication.class, args);
