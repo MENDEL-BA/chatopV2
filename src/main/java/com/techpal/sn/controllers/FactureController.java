@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "api/v1")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @AllArgsConstructor
 public class FactureController {
 
@@ -22,7 +23,7 @@ public class FactureController {
 
     @PostMapping
     @RequestMapping(value = "/factures", method = RequestMethod.POST)
-    public FactureDto createRendezVous(@RequestBody FactureDto factureDto) {
+    public FactureDto createFactures(@RequestBody FactureDto factureDto) {
         if (factureDto == null) {
             throw new IllegalStateException("Un des parametres est null");
         }
@@ -71,5 +72,21 @@ public class FactureController {
         }
 
         return FactureDto.parse(factureService.getFactureByExternalId(uidFacture));
+    }
+
+    @GetMapping
+    @RequestMapping(value = "/getFacturesByPatient", method = RequestMethod.GET)
+    public List<FactureDto> getFacturesByUid(@RequestParam String uidPatient,
+                                       @RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "3") int size) {
+
+        Pageable paging = PageRequest.of(page, size);
+
+        if (uidPatient == null) {
+            throw new IllegalArgumentException("Un des parametres est null");
+        }
+
+        return FactureDto.parseAll(factureService.getFactureByPatient(uidPatient, paging).
+                stream().collect(Collectors.toList()));
     }
 }

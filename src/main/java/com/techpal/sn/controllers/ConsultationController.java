@@ -63,12 +63,11 @@ public class ConsultationController {
 
     //@GetMapping
     @RequestMapping(value = "/consultations", method = RequestMethod.GET)
-    public List<ConsultationDto> getConsultations(@RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "3") int size) {
+    public List<ConsultationDto> getConsultations() {
 
-        Pageable paging = PageRequest.of(page, size);
+       // Pageable paging = PageRequest.of(page, size);
 
-        return ConsultationDto.parseAll(consultationRepository.findAll(paging).stream().collect(Collectors.toList()));
+        return ConsultationDto.parseAll(consultationRepository.findAll().stream().collect(Collectors.toList()));
     }
 
     //@GetMapping

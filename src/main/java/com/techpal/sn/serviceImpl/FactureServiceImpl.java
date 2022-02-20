@@ -41,10 +41,15 @@ public class FactureServiceImpl implements FactureService {
         }
 
         facture.setDateFacturation(LocalDate.now());
-        facture.setMontantFacture(facture.getMontantFacture());
+        facture.setMontantFacture(factureDto.getMontantFacture());
         facture.setLinkedMeta(metaService.createNew(Facture.class.getName()));
-        facture.setDatePaiement(factureDto.getDatepaiement());
-        facture.setEstReglee(factureDto.getEstReglee());
+        facture.setDatePaiement(factureDto.getDatePaiement());
+        if (factureDto.getEtatFacture().equalsIgnoreCase("Oui")) {
+            facture.setEstReglee(true);
+        } else {
+            facture.setEstReglee(false);
+        }
+
         facture.setPatient(patient);
 
         return factureRepository.saveAndFlush(facture);
@@ -117,7 +122,7 @@ public class FactureServiceImpl implements FactureService {
 
         facture.setDateFacturation(LocalDate.now());
         facture.setMontantFacture(facture.getMontantFacture());
-        facture.setDatePaiement(factureDto.getDatepaiement());
+        facture.setDatePaiement(factureDto.getDatePaiement());
         facture.setEstReglee(factureDto.getEstReglee());
 
         return factureRepository.saveAndFlush(facture);

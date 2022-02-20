@@ -44,11 +44,10 @@ public class PatientController {
     }
 
     @GetMapping("/patients")
-    public List<PatientDto> getAllPatient(@RequestParam(defaultValue = "0") int page,
-                                          @RequestParam(defaultValue = "3") int size) {
+    public List<PatientDto> getAllPatient() {
 
-        Pageable paging = PageRequest.of(page, size);
-        return PatientDto.parseAll(patientRepository.findAll(paging).stream().collect(Collectors.toList()));
+        //Pageable paging = PageRequest.of(page, size);
+        return PatientDto.parseAll(patientRepository.findAll().stream().collect(Collectors.toList()));
     }
 
     @GetMapping("/getPatientByUid")

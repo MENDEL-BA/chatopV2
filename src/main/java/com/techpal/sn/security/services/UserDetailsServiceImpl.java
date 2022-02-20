@@ -3,24 +3,23 @@ package com.techpal.sn.security.services;
 import com.techpal.sn.dto.UserDto;
 import com.techpal.sn.models.Meta;
 import com.techpal.sn.models.RendezVous;
+import com.techpal.sn.payload.request.UserInfosModify;
+import com.techpal.sn.payload.response.MessageResponse;
 import com.techpal.sn.repository.RendezVousRepository;
-import com.techpal.sn.repository.RoleRepository;
 import com.techpal.sn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.techpal.sn.models.User;
 import org.springframework.web.client.RestClientException;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsServiceInfo {
@@ -32,6 +31,9 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsSe
 
 	@Autowired
 	RendezVousRepository rendezVousRepository;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@Override
 	@Transactional
@@ -156,6 +158,32 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsSe
 		}
 
 		return rendezVousRepository.findAllByUser(user);
+	}
+
+	@Override
+	public User changePasword(UserInfosModify userInfosModify) {
+
+		if (userInfosModify.getUidUser() == null || userInfosModify.getNewPassword() == null || userInfosModify.getNewPassword() == null) {
+			new MessageResponse("Un des parametres est null");
+		}
+
+		User user = userRepository.findByLinkedMeta(metaService.findByExternalId(userInfosModify.getUidUser()));
+
+		if (user == null) {
+			new MessageResponse("Ouppps! une erreur s'est produite");
+		}
+
+		String encodedOldPassword = passwordEncoder.encode(userInfosModify.getOldPassword());
+
+		if (!Objects.equals(encodedOldPassword, user.getPassword())) {
+			new MessageResponse("Votre dernier mot passe est incorrect");
+		}
+
+		user.setPassword(passwordEncoder.encode(userInfosModify.getNewPassword()));
+
+		User modify = userRepository.saveAndFlush(user);
+
+		return modify;
 	}
 
 }

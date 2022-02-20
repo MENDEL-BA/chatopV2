@@ -1,19 +1,7 @@
 package com.techpal.sn;
 
-import com.techpal.sn.models.Chambre;
-import com.techpal.sn.models.Hospitalisation;
-import com.techpal.sn.models.Lit;
-import com.techpal.sn.repository.ChambreRepository;
-import com.techpal.sn.repository.HospitalisationRepository;
-import com.techpal.sn.repository.LitRepository;
-import com.techpal.sn.security.services.MetaService;
-import com.techpal.sn.security.services.PatientService;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import java.time.LocalDate;
 
 @SpringBootApplication
 //public class SpringBootSecurityJwtApplication implements CommandLineRunner {
@@ -56,9 +44,9 @@ public class SpringBootSecurityJwtApplication {
 		SpringApplication.run(SpringBootSecurityJwtApplication.class, args);
 	}
 
-	/*@Override
-	public void run(String... args) throws Exception {
-		Chambre chambre = new Chambre();
+	//Override
+	//public void run(String... args) throws Exception {
+		/*Chambre chambre = new Chambre();
 		Lit lit = new Lit();
 
 		lit.setEtat(true);
@@ -105,6 +93,7 @@ public class SpringBootSecurityJwtApplication {
 		hospitalisation.setInfosAccompagnat("Modou Gueye");
 
 		Hospitalisation hospitalisationSave = hospitalisationRepository.saveAndFlush(hospitalisation);
+*/
 
-	}*/
+	//}
 }

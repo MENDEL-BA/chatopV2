@@ -1,16 +1,20 @@
 package com.techpal.sn.controllers;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
-import com.techpal.sn.dto.PatientDto;
 import com.techpal.sn.dto.UserDto;
+import com.techpal.sn.models.ERole;
+import com.techpal.sn.models.Role;
+import com.techpal.sn.models.User;
+import com.techpal.sn.payload.request.LoginRequest;
+import com.techpal.sn.payload.request.SignupRequest;
+import com.techpal.sn.payload.request.UserInfosModify;
 import com.techpal.sn.payload.response.JwtResponse;
 import com.techpal.sn.payload.response.MessageResponse;
+import com.techpal.sn.repository.RoleRepository;
+import com.techpal.sn.repository.UserRepository;
+import com.techpal.sn.security.jwt.JwtUtils;
 import com.techpal.sn.security.services.MetaService;
+import com.techpal.sn.security.services.UserDetailsImpl;
+import com.techpal.sn.security.services.UserDetailsServiceImpl;
 import com.techpal.sn.security.services.UserDetailsServiceInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -20,19 +24,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import com.techpal.sn.models.ERole;
-import com.techpal.sn.models.Role;
-import com.techpal.sn.models.User;
-import com.techpal.sn.payload.request.LoginRequest;
-import com.techpal.sn.payload.request.SignupRequest;
-import com.techpal.sn.repository.RoleRepository;
-import com.techpal.sn.repository.UserRepository;
-import com.techpal.sn.security.jwt.JwtUtils;
-import com.techpal.sn.security.services.UserDetailsImpl;
+import javax.validation.Valid;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 //@CrossOrigin(origins = "*", maxAge = 3600)
@@ -60,8 +61,9 @@ public class AuthController {
 	@Autowired
 	UserDetailsServiceInfo userDetailsServiceInfo;
 
+
 	@GetMapping("/infos")
-	public ResponseEntity<?> infosUser() {
+	public JwtResponse infosUser() {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -74,12 +76,34 @@ public class AuthController {
 				.collect(Collectors.toList());
 		UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
 
-		return ResponseEntity.ok(new JwtResponse(userDetails.getId(),
+		User user = userDetailsServiceInfo.getUserByExternalId(userDetails.getUidUser());
+
+		//System.out.println("user.getNumeroTelephone() "+user.getNumeroTelephone());
+		/*return ResponseEntity.ok(new JwtResponse(userDetails.getId(),
 												 userDetails.getUidUser(),
 												 userDetails.getUsername(),
 												 userDetails.getEmail(),
-												 roles));
+												 roles));*/
+
+		   return new JwtResponse(user.getUsername(),
+													user.getEmail(),
+													user.getLinkedMeta().getExternalId(),
+													user.getLastName(),
+													user.getFirstName(),
+													user.getNumeroTelephone(),
+													roles,
+				                                    user.getSpecialiteMedecin() != null ? user.getSpecialiteMedecin().getNomSpecialite() : "");
 	}
+
+
+	@PostMapping("/modifyPassword")
+	public ResponseEntity<User> updatePassword(@Valid @RequestBody UserInfosModify userInfosModify) {
+
+		User user = userDetailsServiceInfo.changePasword(userInfosModify);
+
+		return ResponseEntity.ok(user);
+	}
+
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -115,6 +139,10 @@ public class AuthController {
 		signUpRequest.setNumeroTelephone(userDto.getNumeroTelephone());
 		signUpRequest.setFirstName(userDto.getFirstName());
 
+		if (userDto.getUidSpecialite() != null) {
+          //TODO: ajout d'une specialite pour un medecin
+		}
+
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()
@@ -137,14 +165,14 @@ public class AuthController {
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
-		if (strRoles == null) {
+		if (strRoles == null) { // default case is available, check if it work and remove this test
 			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 			roles.add(userRole);
 		} else {
 			strRoles.forEach(role -> {
 				switch (role) {
-				case "admin":
+				case "admin": // verify if admin is lowercase
 					//System.out.println("role -----"+role);
 					Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -186,10 +214,9 @@ public class AuthController {
 
 
 	@GetMapping("/users")
-	public List<UserDto> getAllUsers(@RequestParam(defaultValue = "0") int page,
-									 @RequestParam(defaultValue = "10") int size) {
-		Pageable paging = PageRequest.of(page, size);
-		return UserDto.parseAll(userRepository.findAll(paging).stream().collect(Collectors.toList()));
+	public List<UserDto> getAllUsers() {
+		//Pageable paging = PageRequest.of(page, size);
+		return UserDto.parseAll(userRepository.findAll().stream().collect(Collectors.toList()));
 
 	}
 

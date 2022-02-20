@@ -6,8 +6,6 @@ import java.util.Optional;
 import com.techpal.sn.dto.UserDto;
 import com.techpal.sn.models.Meta;
 import com.techpal.sn.models.Role;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -22,8 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Boolean existsByEmail(String email);
 
 	User findByLinkedMeta(Meta meta);
-
-	Page<User> findAll(Pageable pageable);
 
 	List<UserDto> findByRoles(Role names);
 

@@ -3,6 +3,7 @@ package com.techpal.sn.security.services;
 import com.techpal.sn.dto.UserDto;
 import com.techpal.sn.models.RendezVous;
 import com.techpal.sn.models.User;
+import com.techpal.sn.payload.request.UserInfosModify;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +19,6 @@ public interface UserDetailsServiceInfo {
     void deleteUser(String uidUser);
 
     List<RendezVous> getAllRendezVousForUser(User user);
+
+    User changePasword(UserInfosModify userInfosModify);
 }

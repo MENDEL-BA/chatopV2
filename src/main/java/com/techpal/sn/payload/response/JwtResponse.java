@@ -11,12 +11,29 @@ public class JwtResponse {
 	private String uidUser;
 	private List<String> roles;
 
-	public JwtResponse( Long id, String uidUser, String username, String email, List<String> roles) {
-		this.id = id;
-		this.uidUser = uidUser;
+	private  String lastName;
+
+	private  String firstName;
+
+	private  String numeroTelephone;
+
+	private  String password;
+
+	private  String specialiteMedecin;
+
+	public JwtResponse(String username, String email, String uidUser,String lastName,
+						String firstName, String numeroTelephone,
+				 	    List<String> roles,
+					    String specialiteMedecin) {
+
 		this.username = username;
 		this.email = email;
+		this.uidUser = uidUser;
+		this.lastName = lastName;
+		this.firstName = firstName;
+		this.numeroTelephone = numeroTelephone;
 		this.roles = roles;
+		this.specialiteMedecin = specialiteMedecin;
 	}
 
 	public String getUidUser() {
@@ -69,5 +86,37 @@ public class JwtResponse {
 
 	public List<String> getRoles() {
 		return roles;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getNumeroTelephone() {
+		return numeroTelephone;
+	}
+
+	public void setNumeroTelephone(String numeroTelephone) {
+		this.numeroTelephone = numeroTelephone;
+	}
+
+	public String getSpecialiteMedecin() {
+		return specialiteMedecin;
+	}
+
+	public void setSpecialiteMedecin(String specialiteMedecin) {
+		this.specialiteMedecin = specialiteMedecin;
 	}
 }

@@ -19,4 +19,6 @@ public interface FactureRepository extends JpaRepository<Facture, Long> {
     Facture findByLinkedMeta(Meta meta);
 
     void deleteByLinkedMeta(Meta meta);
+
+
 }

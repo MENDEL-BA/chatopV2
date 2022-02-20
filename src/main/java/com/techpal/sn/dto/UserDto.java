@@ -1,8 +1,10 @@
 package com.techpal.sn.dto;
 
+import com.techpal.sn.models.Role;
 import com.techpal.sn.models.User;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UserDto implements Serializable {
@@ -19,11 +21,15 @@ public class UserDto implements Serializable {
 
     private  String role;
 
+    private Set<Role> roles;
+
     private  String password;
 
     private  String uidUser;
 
-   // private  String id_token;
+    private  String specialiteMedecin;
+
+    private String uidSpecialite;
 
     public UserDto() {
     }
@@ -35,8 +41,27 @@ public class UserDto implements Serializable {
         this.email = appUser.getEmail();
         this.numeroTelephone = appUser.getNumeroTelephone();
         this.uidUser = appUser.getLinkedMeta().getExternalId();
+        this.roles = appUser.getRoles();
+        //Not fucking treatement here,change it
+        this.specialiteMedecin = appUser.getSpecialiteMedecin() != null ? appUser.getSpecialiteMedecin().getNomSpecialite() : "";
+        this.uidSpecialite = appUser.getSpecialiteMedecin() != null ? appUser.getSpecialiteMedecin().getLinkedMeta().getExternalId() : "";
     }
 
+    public String getUidSpecialite() {
+        return uidSpecialite;
+    }
+
+    public void setUidSpecialite(String uidSpecialite) {
+        this.uidSpecialite = uidSpecialite;
+    }
+
+    public String getSpecialiteMedecin() {
+        return specialiteMedecin;
+    }
+
+    public void setSpecialiteMedecin(String specialiteMedecin) {
+        this.specialiteMedecin = specialiteMedecin;
+    }
 
     public String getFirstName() {
         return firstName;

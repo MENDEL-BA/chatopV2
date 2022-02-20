@@ -63,6 +63,9 @@ public class User {
 	@OneToOne(optional = false)
 	private Meta linkedMeta;
 
+	@OneToOne
+	private SpecialiteMedecin specialiteMedecin;
+
 	public User() {
 	}
 
@@ -81,6 +84,19 @@ public class User {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.numeroTelephone = numeroTelephone;
+	}
+
+	public User(String username, String email, String password, String firstName, String lastName,
+				String numeroTelephone, Set<Role> roles, Meta linkedMeta, SpecialiteMedecin specialiteMedecin) {
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.numeroTelephone = numeroTelephone;
+		this.roles = roles;
+		this.linkedMeta = linkedMeta;
+		this.specialiteMedecin = specialiteMedecin;
 	}
 
 	public Long getId() {
@@ -155,4 +171,11 @@ public class User {
 		this.numeroTelephone = numeroTelephone;
 	}
 
+	public SpecialiteMedecin getSpecialiteMedecin() {
+		return specialiteMedecin;
+	}
+
+	public void setSpecialiteMedecin(SpecialiteMedecin specialiteMedecin) {
+		this.specialiteMedecin = specialiteMedecin;
+	}
 }

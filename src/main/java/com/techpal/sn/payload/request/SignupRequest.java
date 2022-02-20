@@ -26,6 +26,16 @@ public class SignupRequest {
 
     private  String numeroTelephone;
 
+    private String uidSpecialiate;
+
+    public String getUidSpecialiate() {
+        return uidSpecialiate;
+    }
+
+    public void setUidSpecialiate(String uidSpecialiate) {
+        this.uidSpecialiate = uidSpecialiate;
+    }
+
     public String getLastName() {
         return lastName;
     }

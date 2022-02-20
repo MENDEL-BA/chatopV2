@@ -1,8 +1,7 @@
 package com.techpal.sn.dto;
+
 import com.techpal.sn.models.Ordonnance;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;

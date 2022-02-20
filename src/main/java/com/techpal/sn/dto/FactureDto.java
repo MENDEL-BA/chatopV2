@@ -15,9 +15,11 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class FactureDto implements Serializable {
 
-    private LocalDate datepaiement;
+    private LocalDate datePaiement;
 
     private Boolean estReglee;
+
+    private String etatFacture;
 
     private Integer montantFacture;
 
@@ -25,12 +27,24 @@ public class FactureDto implements Serializable {
 
     private String uidPatient;
 
+    private String infosPatients;
+
     private FactureDto(Facture facture){
-        this.datepaiement = facture.getDatePaiement();
+        this.datePaiement = facture.getDatePaiement();
         this.montantFacture = facture.getMontantFacture();
         this.uidFacture = facture.getLinkedMeta().getExternalId();
         this.estReglee = facture.getEstReglee();
         this.uidPatient = facture.getPatient().getLinkedMeta().getExternalId();
+        this.infosPatients = facture.getPatient().getNomPatient().concat(" ".concat(facture.getPatient().getPrenomPatient()));
+        this.etatFacture = etatFactureClient(facture);
+    }
+
+    private String etatFactureClient(Facture facture) {
+        if (facture.getEstReglee()) {
+            return this.etatFacture = "Réglée";
+        } else {
+            return this.etatFacture = "Non Payée";
+        }
     }
 
     public static FactureDto parse(Facture Facture) {
