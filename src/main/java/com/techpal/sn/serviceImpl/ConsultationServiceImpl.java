@@ -11,13 +11,12 @@ import com.techpal.sn.security.services.MetaService;
 import com.techpal.sn.security.services.PatientService;
 import com.techpal.sn.security.services.UserDetailsServiceInfo;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -97,7 +96,7 @@ public class ConsultationServiceImpl implements ConsultationService {
     }
 
     @Override
-    public Page<Consultation> getConsultationByPatient(String uidPatient, Pageable pageable) {
+    public List<Consultation> getConsultationByPatient(String uidPatient) {
 
         if (uidPatient == null) {
             throw new IllegalStateException("Un des parametres est null");
@@ -109,11 +108,11 @@ public class ConsultationServiceImpl implements ConsultationService {
             throw new IllegalStateException("le patient n'existe pas");
         }
 
-        return consultationRepository.findByPatient(patient, pageable);
+        return consultationRepository.findByPatient(patient);
     }
 
     @Override
-    public Page<Consultation> getConsultationByMedecin(String uidMedecin, Pageable pageable) {
+    public List<Consultation> getConsultationByMedecin(String uidMedecin) {
 
         if (uidMedecin == null) {
             throw new IllegalStateException("Un des parametres est null");
@@ -125,7 +124,7 @@ public class ConsultationServiceImpl implements ConsultationService {
             throw new IllegalStateException("Le medecin est introuvable");
         }
 
-        return consultationRepository.findByUser(medecin, pageable);
+        return consultationRepository.findByUser(medecin);
     }
 
     @Override
@@ -155,7 +154,7 @@ public class ConsultationServiceImpl implements ConsultationService {
     }
 
     @Override
-    public Page<Consultation> getConsultationByPatientAndMedecin(String uidPatient, String uidMedecin, Pageable pageable) {
+    public List<Consultation> getConsultationByPatientAndMedecin(String uidPatient, String uidMedecin) {
 
         if (uidPatient == null || uidMedecin == null) {
             throw new IllegalStateException("Un des parametres est null");
@@ -169,6 +168,6 @@ public class ConsultationServiceImpl implements ConsultationService {
             throw new IllegalStateException("Un des parametres est null");
         }
 
-        return consultationRepository.findByPatientAndUser(patient, medecin, pageable);
+        return consultationRepository.findByPatientAndUser(patient, medecin);
     }
 }

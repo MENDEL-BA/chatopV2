@@ -58,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.authorizeRequests().antMatchers("/api/auth/**").permitAll()
 			.antMatchers("/api/test/**").permitAll()
+			.antMatchers("/api/auth/getMedecinsByLocationAndSpecialite").permitAll()
 			.antMatchers("/stomp").permitAll() // On autorise l'appel handshake entre le client et le serveur
 			.anyRequest().authenticated();
 

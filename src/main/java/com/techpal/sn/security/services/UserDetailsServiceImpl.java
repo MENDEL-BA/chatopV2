@@ -3,9 +3,11 @@ package com.techpal.sn.security.services;
 import com.techpal.sn.dto.UserDto;
 import com.techpal.sn.models.Meta;
 import com.techpal.sn.models.RendezVous;
+import com.techpal.sn.models.SpecialiteMedecin;
 import com.techpal.sn.payload.request.UserInfosModify;
 import com.techpal.sn.payload.response.MessageResponse;
 import com.techpal.sn.repository.RendezVousRepository;
+import com.techpal.sn.repository.SpecialiteRepository;
 import com.techpal.sn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +36,9 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsSe
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
+
+	@Autowired
+	SpecialiteRepository specialiteRepository;
 
 	@Override
 	@Transactional
@@ -184,6 +189,20 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsSe
 		User modify = userRepository.saveAndFlush(user);
 
 		return modify;
+	}
+
+	@Override
+	public List<User> getMedecinByLocationAndSpecialite(String location, String specialite) {
+
+		SpecialiteMedecin specialiteMedecin = null;
+
+		if (specialite != null) {
+			specialiteMedecin = specialiteRepository.findByNomSpecialite(specialite.trim());
+			return userRepository.findByLocationOrAndSpecialiteMedecin(location, specialiteMedecin);
+		} else {
+			return new ArrayList<>();
+		}
+
 	}
 
 }

@@ -20,7 +20,7 @@ public class SpecialiteMedecin {
 
     @NotBlank
     @Size(max = 20)
-    @Column(name = "nom_specialite")
+    @Column(name = "nom_specialite", unique = true)
     private String nomSpecialite;
 
     @JsonIgnore

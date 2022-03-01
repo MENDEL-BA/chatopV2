@@ -31,6 +31,8 @@ public class UserDto implements Serializable {
 
     private String uidSpecialite;
 
+    private String location;
+
     public UserDto() {
     }
 
@@ -42,6 +44,7 @@ public class UserDto implements Serializable {
         this.numeroTelephone = appUser.getNumeroTelephone();
         this.uidUser = appUser.getLinkedMeta().getExternalId();
         this.roles = appUser.getRoles();
+        this.location = appUser.getLocation();
         //Not fucking treatement here,change it
         this.specialiteMedecin = appUser.getSpecialiteMedecin() != null ? appUser.getSpecialiteMedecin().getNomSpecialite() : "";
         this.uidSpecialite = appUser.getSpecialiteMedecin() != null ? appUser.getSpecialiteMedecin().getLinkedMeta().getExternalId() : "";
@@ -131,6 +134,14 @@ public class UserDto implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     @Override

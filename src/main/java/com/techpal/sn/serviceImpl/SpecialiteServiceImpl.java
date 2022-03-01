@@ -34,7 +34,7 @@ public class SpecialiteServiceImpl implements SpecialiteService {
 
         SpecialiteMedecin specialiteMedecin = new SpecialiteMedecin();
 
-        specialiteMedecin.setNomSpecialite(specialiteDto.getNomSpecialite());
+        specialiteMedecin.setNomSpecialite(specialiteDto.getNomSpecialite().trim());
         specialiteMedecin.setLinkedMeta(metaService.createNew(SpecialiteMedecin.class.getName()));
 
         return specialiteRepository.saveAndFlush(specialiteMedecin);
@@ -49,7 +49,7 @@ public class SpecialiteServiceImpl implements SpecialiteService {
                 new MessageResponse("Un des parametres est null");
             }
 
-            specialiteMedecin.setNomSpecialite(specialiteDto.getNomSpecialite());
+            specialiteMedecin.setNomSpecialite(specialiteDto.getNomSpecialite().trim());
 
             return specialiteRepository.saveAndFlush(specialiteMedecin);
         } else {
@@ -70,5 +70,14 @@ public class SpecialiteServiceImpl implements SpecialiteService {
         }
 
         return specialiteRepository.findByLinkedMeta(meta);
+    }
+
+    @Override
+    public SpecialiteMedecin getByNomSpecialite(String nomSpecialite) {
+
+        if (nomSpecialite == null) {
+            new MessageResponse("Un des parametres est null");
+        }
+        return specialiteRepository.findByNomSpecialite(nomSpecialite.trim());
     }
 }

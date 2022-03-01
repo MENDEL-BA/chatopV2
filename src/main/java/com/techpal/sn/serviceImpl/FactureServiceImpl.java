@@ -11,10 +11,10 @@ import com.techpal.sn.security.services.MetaService;
 import com.techpal.sn.security.services.PatientService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -88,7 +88,7 @@ public class FactureServiceImpl implements FactureService {
     }
 
     @Override
-    public Page<Facture> getFactureByPatient(String uidPatient, Pageable pageable) {
+    public List<Facture> getFactureByPatient(String uidPatient) {
 
         if (uidPatient == null ) {
             throw new IllegalStateException("Un des parametres est null");
@@ -100,7 +100,7 @@ public class FactureServiceImpl implements FactureService {
             throw new IllegalStateException("aucune donnee");
         }
 
-        return factureRepository.findByPatient(patient, pageable);
+        return factureRepository.findByPatient(patient);
     }
 
     @Override

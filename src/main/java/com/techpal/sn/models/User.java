@@ -66,6 +66,8 @@ public class User {
 	@OneToOne
 	private SpecialiteMedecin specialiteMedecin;
 
+	private String location;
+
 	public User() {
 	}
 
@@ -87,7 +89,8 @@ public class User {
 	}
 
 	public User(String username, String email, String password, String firstName, String lastName,
-				String numeroTelephone, Set<Role> roles, Meta linkedMeta, SpecialiteMedecin specialiteMedecin) {
+				String numeroTelephone, Set<Role> roles, Meta linkedMeta, SpecialiteMedecin specialiteMedecin,
+				String location) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
@@ -97,6 +100,7 @@ public class User {
 		this.roles = roles;
 		this.linkedMeta = linkedMeta;
 		this.specialiteMedecin = specialiteMedecin;
+		this.location = location;
 	}
 
 	public Long getId() {
@@ -177,5 +181,13 @@ public class User {
 
 	public void setSpecialiteMedecin(SpecialiteMedecin specialiteMedecin) {
 		this.specialiteMedecin = specialiteMedecin;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 }

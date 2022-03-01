@@ -8,13 +8,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface FactureRepository extends JpaRepository<Facture, Long> {
 
 
-    Page<Facture> findAll(Pageable pageable);
+    List<Facture> findAll();
 
-    Page<Facture> findByPatient(Patient patient, Pageable pageable);
+    List<Facture> findByPatient(Patient patient);
 
     Facture findByLinkedMeta(Meta meta);
 

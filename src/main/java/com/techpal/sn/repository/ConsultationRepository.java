@@ -5,21 +5,21 @@ import com.techpal.sn.models.Consultation;
 import com.techpal.sn.models.Meta;
 import com.techpal.sn.models.Patient;
 import com.techpal.sn.models.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface ConsultationRepository extends JpaRepository<Consultation, Long> {
 
-    Page<Consultation> findAll(Pageable pageable);
+    List<Consultation> findAll();
 
-    Page<Consultation> findByPatient(Patient patient, Pageable pageable);
+    List<Consultation> findByPatient(Patient patient);
 
-    Page<Consultation> findByPatientAndUser(Patient patient, User medecin, Pageable pageable);
+    List<Consultation> findByPatientAndUser(Patient patient, User medecin);
 
-    Page<Consultation> findByUser(User medecin, Pageable pageable);
+    List<Consultation> findByUser(User medecin);
 
     Consultation findByLinkedMeta(Meta meta);
 

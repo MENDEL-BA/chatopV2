@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,8 +37,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+//@CrossOrigin(origins = "http://localhost:4200/login", maxAge = 3600)
 //@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -67,7 +70,7 @@ public class AuthController {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-		if (auth == null) {
+		if (auth.getPrincipal() == null) {
 			new MessageResponse("Veuillez vous authentifier d'abord!");
 		}
 
@@ -138,6 +141,7 @@ public class AuthController {
 		signUpRequest.setLastName(userDto.getLastName());
 		signUpRequest.setNumeroTelephone(userDto.getNumeroTelephone());
 		signUpRequest.setFirstName(userDto.getFirstName());
+		signUpRequest.setLocation(userDto.getLocation().trim());
 
 		if (userDto.getUidSpecialite() != null) {
           //TODO: ajout d'une specialite pour un medecin
@@ -217,6 +221,16 @@ public class AuthController {
 	public List<UserDto> getAllUsers() {
 		//Pageable paging = PageRequest.of(page, size);
 		return UserDto.parseAll(userRepository.findAll().stream().collect(Collectors.toList()));
+
+	}
+
+
+	//@GetMapping()
+	@RequestMapping(value ="/getMedecinsByLocationAndSpecialite", method = RequestMethod.GET)
+	public List<UserDto> getAllMedecinsByLocationAndSpecialite(@Nullable @RequestParam String location,
+															   @RequestParam String specialite) {
+
+		return UserDto.parseAll(userDetailsServiceInfo.getMedecinByLocationAndSpecialite(location, specialite));
 
 	}
 

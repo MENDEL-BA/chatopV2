@@ -21,7 +21,7 @@ public class FactureController {
 
     private final FactureRepository factureRepository;
 
-    @PostMapping
+    //@PostMapping
     @RequestMapping(value = "/factures", method = RequestMethod.POST)
     public FactureDto createFactures(@RequestBody FactureDto factureDto) {
         if (factureDto == null) {
@@ -31,7 +31,7 @@ public class FactureController {
         return FactureDto.parse(factureService.createFacture(factureDto));
     }
 
-    @PostMapping
+    //@PostMapping
     @RequestMapping(value = "/updateFactures", method = RequestMethod.POST)
     public FactureDto updateFacture(@RequestBody FactureDto factureDto) {
 
@@ -42,7 +42,7 @@ public class FactureController {
         return FactureDto.parse(factureService.updateFacture(factureDto));
     }
 
-    @PostMapping
+    //@PostMapping
     @RequestMapping(value = "/deleteFactures", method = RequestMethod.POST)
     public void deleteFactures(@RequestParam String uidFacture) {
 
@@ -53,17 +53,14 @@ public class FactureController {
         factureService.deleteFacture(uidFacture);
     }
 
-    @GetMapping
+    //@GetMapping
     @RequestMapping(value = "/factures", method = RequestMethod.GET)
-    public List<FactureDto> getAllFactures(@RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "3") int size) {
+    public List<FactureDto> getAllFactures() {
 
-        Pageable paging = PageRequest.of(page, size);
-
-        return FactureDto.parseAll(factureRepository.findAll(paging).stream().collect(Collectors.toList()));
+        return FactureDto.parseAll(factureRepository.findAll());
     }
 
-    @GetMapping
+   // @GetMapping
     @RequestMapping(value = "/getFacturesByUid", method = RequestMethod.GET)
     public FactureDto getFacturesByUid(@RequestParam String uidFacture) {
 
@@ -74,19 +71,14 @@ public class FactureController {
         return FactureDto.parse(factureService.getFactureByExternalId(uidFacture));
     }
 
-    @GetMapping
+    //@GetMapping
     @RequestMapping(value = "/getFacturesByPatient", method = RequestMethod.GET)
-    public List<FactureDto> getFacturesByUid(@RequestParam String uidPatient,
-                                       @RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "3") int size) {
-
-        Pageable paging = PageRequest.of(page, size);
+    public List<FactureDto> getFacturesByUidForPatient(@RequestParam String uidPatient) {
 
         if (uidPatient == null) {
             throw new IllegalArgumentException("Un des parametres est null");
         }
 
-        return FactureDto.parseAll(factureService.getFactureByPatient(uidPatient, paging).
-                stream().collect(Collectors.toList()));
+        return FactureDto.parseAll(factureService.getFactureByPatient(uidPatient));
     }
 }

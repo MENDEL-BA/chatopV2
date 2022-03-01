@@ -21,4 +21,6 @@ public interface UserDetailsServiceInfo {
     List<RendezVous> getAllRendezVousForUser(User user);
 
     User changePasword(UserInfosModify userInfosModify);
+
+    List<User> getMedecinByLocationAndSpecialite(String location, String specialite);
 }

@@ -11,5 +11,7 @@ public interface SpecialiteService {
 
     SpecialiteMedecin getByExternalId(String externalId);
 
+    SpecialiteMedecin getByNomSpecialite(String nomSpecialite);
+
 
 }

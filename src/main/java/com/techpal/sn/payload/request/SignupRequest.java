@@ -28,6 +28,8 @@ public class SignupRequest {
 
     private String uidSpecialiate;
 
+    private String location;
+
     public String getUidSpecialiate() {
         return uidSpecialiate;
     }
@@ -90,6 +92,14 @@ public class SignupRequest {
     
     public void setRole(Set<String> role) {
       this.role = role;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     @Override

@@ -11,5 +11,7 @@ public interface SpecialiteRepository extends JpaRepository<SpecialiteMedecin, L
 
     SpecialiteMedecin findByLinkedMeta(Meta meta);
 
+    SpecialiteMedecin findByNomSpecialite(String nomSpecialite);
+
     List<SpecialiteMedecin> findAll();
 }

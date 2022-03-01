@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -78,35 +75,28 @@ public class ConsultationController {
 
         Pageable paging = PageRequest.of(page, size);
 
-        return ConsultationDto.parseAll(consultationService.getConsultationByPatient(uidPatient, paging).stream().collect(Collectors.toList()));
+        return ConsultationDto.parseAll(consultationService.getConsultationByPatient(uidPatient).stream().collect(Collectors.toList()));
     }
 
     @GetMapping("/getConsultationByMedecin")
     @PreAuthorize("hasRole('ROLE_MEDECIN')")
-    public List<ConsultationDto> getConsultationByMedecin(@RequestParam(defaultValue = "0") int page,
-                                                          @RequestParam(defaultValue = "3") int size) {
-
-        Pageable paging = PageRequest.of(page, size);
+    public List<ConsultationDto> getConsultationByMedecin() {
 
         //Get current User, si j'ai le temps je ferais une fonction pour
         Optional<User> user = userDetailsServiceInfo.getUser();
 
         //Get current User, si j'ai le temps je ferais une fonction pour
 
-        return ConsultationDto.parseAll(consultationService.getConsultationByMedecin(user.get().getLinkedMeta().getExternalId(), paging).stream().collect(Collectors.toList()));
+        return ConsultationDto.parseAll(consultationService.getConsultationByMedecin(user.get().getLinkedMeta().getExternalId()));
     }
 
 
     //@GetMapping
     @RequestMapping(value = "/getConsultationByPatientAndMedecin/{uidPatient}/{uidMedecin}", method = RequestMethod.GET)
-    public List<ConsultationDto> getConsultationByPatientAndMedecin(@RequestParam(defaultValue = "0") int page,
-                                                                    @RequestParam(defaultValue = "3") int size,
-                                                                    @PathVariable String uidPatient,
+    public List<ConsultationDto> getConsultationByPatientAndMedecin(@PathVariable String uidPatient,
                                                                     @PathVariable String uidMedecin) {
 
-        Pageable paging = PageRequest.of(page, size);
-
-        return ConsultationDto.parseAll(consultationService.getConsultationByPatientAndMedecin(uidPatient, uidMedecin, paging).stream().collect(Collectors.toList()));
+        return ConsultationDto.parseAll(consultationService.getConsultationByPatientAndMedecin(uidPatient, uidMedecin));
     }
 
     //@GetMapping
