@@ -5,12 +5,12 @@ import com.techpal.sn.dto.FactureDto;
 import com.techpal.sn.models.Facture;
 import com.techpal.sn.models.Meta;
 import com.techpal.sn.models.Patient;
+import com.techpal.sn.payload.response.MessageResponse;
 import com.techpal.sn.repository.FactureRepository;
 import com.techpal.sn.security.services.FactureService;
 import com.techpal.sn.security.services.MetaService;
 import com.techpal.sn.security.services.PatientService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -105,6 +105,8 @@ public class FactureServiceImpl implements FactureService {
 
     @Override
     public Facture updateFacture(FactureDto factureDto) {
+
+        System.out.println("la facture est le "+factureDto.toString());
         if (factureDto == null) {
             throw new IllegalStateException("Un des parametres est null");
         }
@@ -121,11 +123,76 @@ public class FactureServiceImpl implements FactureService {
         }
 
         facture.setDateFacturation(LocalDate.now());
-        facture.setMontantFacture(facture.getMontantFacture());
+        facture.setMontantFacture(factureDto.getMontantFacture());
         facture.setDatePaiement(factureDto.getDatePaiement());
-        facture.setEstReglee(factureDto.getEstReglee());
+
+        facture.setEstReglee(factureDto.getEtatFacture().equalsIgnoreCase("NON") ? true : false);
 
         return factureRepository.saveAndFlush(facture);
     }
+
+    @Override
+    public Integer getBeneficeOfRange(LocalDate dateEntree) {
+
+        if (dateEntree == null) {
+            new MessageResponse("Veuillez fournir deux dates valide");
+        }
+
+        int montantBenefice = 0;
+
+        List<Facture> facturesAfterInputDate = factureRepository.findFactureByDateFacturationAfterAndEstRegleeIsTrue(dateEntree);
+
+        if (facturesAfterInputDate.isEmpty()) {
+            return 0;
+        }
+
+        for (Facture facture : facturesAfterInputDate) {
+            montantBenefice += facture.getMontantFacture();
+
+        }
+
+        return montantBenefice;
+    }
+
+    @Override
+    public List<Facture> getMontantFactureForPatientForNotReglee(String uidPatient) {
+
+        if (uidPatient == null) {
+            new MessageResponse("Un des parametres est null");
+        }
+
+        Patient patient = patientService.getPatientByExternalId(uidPatient);
+
+        if (patient == null) {
+            new MessageResponse("Le patient n'a pas été trouvé");
+        }
+
+        List<Facture> facturesForPatientAndIsRegleeIsFalse = factureRepository.findFactureByPatientAndEstRegleeIsFalse(patient);
+
+        if (facturesForPatientAndIsRegleeIsFalse.isEmpty()) {
+            new MessageResponse("Aucune facture n'a été trouvée pour le patient");
+        }
+
+
+        return facturesForPatientAndIsRegleeIsFalse;
+
+    }
+
+    @Override
+    public Integer getbeneficeForToday() {
+
+        int montantBeneficeForToday = 0;
+        List<Facture> facturesToday = factureRepository.findFactureByDateFacturation(LocalDate.now());
+
+        if (!facturesToday.isEmpty()) {
+            for (Facture facture: facturesToday) {
+                return montantBeneficeForToday += facture.getMontantFacture();
+            }
+        }
+
+        return 0;
+
+    }
+
 
 }

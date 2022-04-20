@@ -21,7 +21,7 @@ public class FactureDto implements Serializable {
 
     private String etatFacture;
 
-    private Integer montantFacture;
+    private double montantFacture;
 
     private String uidFacture;
 
@@ -36,17 +36,10 @@ public class FactureDto implements Serializable {
         this.estReglee = facture.getEstReglee();
         this.uidPatient = facture.getPatient().getLinkedMeta().getExternalId();
         this.infosPatients = facture.getPatient().getNomPatient().concat(" ".concat(facture.getPatient().getPrenomPatient()));
-        this.etatFacture = etatFactureClient(facture);
+        //this.etatFacture = etatFactureClient(facture);
     }
 
-    private String etatFactureClient(Facture facture) {
-        if (facture.getEstReglee()) {
-            return this.etatFacture = "Réglée";
-        } else {
-            return this.etatFacture = "Non Payée";
-        }
-    }
-
+  
     public static FactureDto parse(Facture Facture) {
         return new FactureDto(Facture);
     }
@@ -54,5 +47,5 @@ public class FactureDto implements Serializable {
     public static List<FactureDto> parseAll(List<Facture> factures) {
         return factures.stream().map(FactureDto::parse).collect(Collectors.toList());
     }
-
+    
 }

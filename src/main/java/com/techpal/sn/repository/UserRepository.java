@@ -25,10 +25,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	List<UserDto> findByRoles(Role names);
 
-	List<User> findByLocationOrAndSpecialiteMedecin(@Nullable String location, SpecialiteMedecin specialiteMedecin);
+	//List<User> findByLocationOrAndSpecialiteMedecin(@Nullable String location, SpecialiteMedecin specialiteMedecin);
 
-	List<User> findBySpecialiteMedecin(SpecialiteMedecin specialiteMedecin);
+	List<User> findByLocationAndSpecialiteMedecin(String location,@Nullable SpecialiteMedecin specialiteMedecin);
 
-	List<User> findByLocation(@Nullable String location);
+	List<User> findBySpecialiteMedecinAndSpecialiteMedecinIsNotNull(SpecialiteMedecin specialiteMedecin);
+
+	//List<User> findByLocation(@Nullable String location);
 
 }

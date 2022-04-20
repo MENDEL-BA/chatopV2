@@ -9,6 +9,7 @@ import com.techpal.sn.payload.response.MessageResponse;
 import com.techpal.sn.repository.RendezVousRepository;
 import com.techpal.sn.repository.SpecialiteRepository;
 import com.techpal.sn.repository.UserRepository;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -159,7 +160,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsSe
 	public List<RendezVous> getAllRendezVousForUser(User user) {
 
 		if (user == null) {
-			throw new RestClientException("L'utilisatuer est null");
+			throw new RestClientException("L'utilisateur est null");
 		}
 
 		return rendezVousRepository.findAllByUser(user);
@@ -194,11 +195,16 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsSe
 	@Override
 	public List<User> getMedecinByLocationAndSpecialite(String location, String specialite) {
 
-		SpecialiteMedecin specialiteMedecin = null;
+		SpecialiteMedecin specialiteMedecin = specialiteRepository.findByNomSpecialite(specialite.trim());
 
-		if (specialite != null) {
-			specialiteMedecin = specialiteRepository.findByNomSpecialite(specialite.trim());
-			return userRepository.findByLocationOrAndSpecialiteMedecin(location, specialiteMedecin);
+		if (Strings.isNotBlank(location) && specialite != null && location != null) {
+
+			return userRepository.findByLocationAndSpecialiteMedecin(location, specialiteMedecin);
+
+		} else if (Strings.isBlank(location)){
+
+			return userRepository.findBySpecialiteMedecinAndSpecialiteMedecinIsNotNull(specialiteMedecin);
+
 		} else {
 			return new ArrayList<>();
 		}

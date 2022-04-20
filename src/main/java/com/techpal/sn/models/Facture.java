@@ -35,8 +35,9 @@ public class Facture {
     @Column(name = "est_reglee")
     private Boolean estReglee;
 
+    //TODO: Je sais pas à quoi je pensais quand je l'ai mis à integer,
     @Column(name = "montant_net")
-    private Integer montantFacture;
+    private double montantFacture;
 
     @ManyToOne
     @JsonIgnoreProperties(value = { "factures", "rendezVous", "chambres", "lit", "consultation" }, allowSetters = true)

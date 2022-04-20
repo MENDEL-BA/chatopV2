@@ -32,7 +32,7 @@ public class FactureController {
     }
 
     //@PostMapping
-    @RequestMapping(value = "/updateFactures", method = RequestMethod.POST)
+    @RequestMapping(value = "/factures", method = RequestMethod.PUT)
     public FactureDto updateFacture(@RequestBody FactureDto factureDto) {
 
         if (factureDto == null) {
@@ -43,7 +43,7 @@ public class FactureController {
     }
 
     //@PostMapping
-    @RequestMapping(value = "/deleteFactures", method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteFactures", method = RequestMethod.DELETE)
     public void deleteFactures(@RequestParam String uidFacture) {
 
         if (uidFacture == null) {

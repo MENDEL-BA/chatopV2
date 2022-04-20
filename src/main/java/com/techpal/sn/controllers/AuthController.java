@@ -141,7 +141,9 @@ public class AuthController {
 		signUpRequest.setLastName(userDto.getLastName());
 		signUpRequest.setNumeroTelephone(userDto.getNumeroTelephone());
 		signUpRequest.setFirstName(userDto.getFirstName());
-		signUpRequest.setLocation(userDto.getLocation().trim());
+		if (userDto.getLocation() != null) {
+			signUpRequest.setLocation(userDto.getLocation().trim());
+		}
 
 		if (userDto.getUidSpecialite() != null) {
           //TODO: ajout d'une specialite pour un medecin
@@ -230,6 +232,7 @@ public class AuthController {
 	public List<UserDto> getAllMedecinsByLocationAndSpecialite(@Nullable @RequestParam String location,
 															   @RequestParam String specialite) {
 
+		System.out.println("Les params sont le "+location+" "+specialite);
 		return UserDto.parseAll(userDetailsServiceInfo.getMedecinByLocationAndSpecialite(location, specialite));
 
 	}
