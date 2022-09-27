@@ -18,7 +18,7 @@ maven-package:
     stage : package
     extends : .maven
     script:
-        - mvn package -DskipTests
+        - mvn package -DskipTests -Ddocker.skip=true
         - rm -rf target/*
     artifacts:
       paths:
