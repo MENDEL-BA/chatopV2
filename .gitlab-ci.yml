@@ -19,7 +19,7 @@ maven-package:
     extends : .maven
     script:
         - mvn package -DskipTests -Ddocker.skip=true
-        - rm -rf target/*
+        #- rm -rf target/*
     artifacts:
       paths:
         - target/
