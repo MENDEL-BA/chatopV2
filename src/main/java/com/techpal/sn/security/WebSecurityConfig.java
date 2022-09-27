@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -34,7 +35,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthTokenFilter authenticationJwtTokenFilter() {
 		return new AuthTokenFilter();
 	}
-
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers("/swagger-ui/**", "/v3/api-docs/**");
+	}
 	@Override
 	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
 		authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
@@ -59,6 +63,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests().antMatchers("/api/auth/**").permitAll()
 			.antMatchers("/api/test/**").permitAll()
 			.antMatchers("/api/auth/getMedecinsByLocationAndSpecialite").permitAll()
+			//.antMatchers("/swagger2-demo/swagger-ui.html").permitAll()
+			//.antMatchers("/swagger-ui/**").permitAll()
+			//.antMatchers("/swagger-ui.html").permitAll()
+			//.antMatchers("/v2/api-docs").permitAll()
 			.antMatchers("/stomp").permitAll() // On autorise l'appel handshake entre le client et le serveur
 			.anyRequest().authenticated();
 

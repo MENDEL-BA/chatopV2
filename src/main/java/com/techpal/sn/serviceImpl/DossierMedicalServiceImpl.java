@@ -12,6 +12,7 @@ import com.techpal.sn.security.services.MetaService;
 import com.techpal.sn.security.services.PatientService;
 import com.techpal.sn.security.services.UserDetailsServiceInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 
 import java.time.LocalDate;
 
@@ -61,8 +62,12 @@ public class DossierMedicalServiceImpl implements DossierMedicalService {
     }
 
     @Override
-    public DossierMedical deleteDossierMedical(DossierMedicalDto dossierMedicalDto) {
-        return null;
+    public void deleteDossierMedical(DossierMedicalDto dossierMedicalDto) {
+        if (dossierMedicalDto != null || dossierMedicalDto.getUidDossier() != null) {
+            dossierMedicalRepository.deleteByLinkedMeta(dossierMedicalDto.getUidDossier());
+        }else {
+            new RestClientException("Le dossier medical n'a pas été trouvé");
+        }
     }
 
     @Override
@@ -78,5 +83,31 @@ public class DossierMedicalServiceImpl implements DossierMedicalService {
             return dossierMedicalRepository.findDossierMedicalsByLinkedMeta(meta);
         }
         return new DossierMedical();
+    }
+
+    @Override
+    public DossierMedical getByPatient(String uidPatient) {
+        if (uidPatient == null) {
+            new RestClientException("Oupps Une erreur s'est produite");
+        }
+
+        DossierMedical dossierMedical = null;
+
+        Patient patient = patientService.getPatientByExternalId(uidPatient);
+        if (patient != null) {
+            dossierMedical = dossierMedicalRepository.findByPatient(patient);
+        }
+
+        return new DossierMedical();
+    }
+
+    @Override
+    public DossierMedical getByMedecin(String uidMedecin) {
+        return null;
+    }
+
+    @Override
+    public DossierMedical getByMedecinAndPatient(User medecin, Patient patient) {
+        return null;
     }
 }

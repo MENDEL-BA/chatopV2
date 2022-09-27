@@ -5,9 +5,10 @@ server:
 
 spring:
   datasource:
-    password:
     url: jdbc:postgresql://localhost:5432/clinic_v2
     username: postgres
+    #username: mendel
+    #password: clinic123
   jpa:
     hibernate:
       ddl-auto: update
