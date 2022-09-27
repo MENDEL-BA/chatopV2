@@ -31,7 +31,7 @@ maven_verify:
     extends: .maven
     dependencies: [maven-package]
     script:
-        - mvn verify -Dmaven.main.skip
+        - mvn verify -DskipTests -Dmaven.main.skip
 
 docker-image:
     stage: docker
