@@ -40,6 +40,6 @@ docker-image:
     before_script:
         - curl --show-error --silent --location --output "/usr/local/bin/img" "https://github.com/genuinetools/img/releases/download/v0.5.11/img-linux-amd64" && chmod a+x "/usr/local/bin/img" && img --version
     script:
-    - img build --no-cache -f common/gke.Dockerfile --build-arg JVM_PARAMS=$JVM_PARAMS -t $GCR_IMAGE:$UNIQUE_VERSION target
+    - img build --no-cache -f common/gke.Dockerfile --build-arg JVM_PARAMS=$JVM_PARAMS -t $GCR_IMAGE:$UNIQUE_VERSION .
     - img push "$GCR_IMAGE:$UNIQUE_VERSION"
 
