@@ -18,7 +18,7 @@ maven-package:
     stage : package
     extends : .maven
     script:
-        - mvn $MAVEN_CLI_OPTS package -DskipTests
+        - mvn package -DskipTests
         - rm -rf target/*
     artifacts:
       paths:
@@ -31,7 +31,7 @@ maven_verify:
     extends: .maven
     dependencies: [maven-package]
     script:
-        - mvn $MAVEN_CLI_OPTS verify -Dmaven.main.skip
+        - mvn verify -Dmaven.main.skip
 
 docker-image:
     stage: docker
