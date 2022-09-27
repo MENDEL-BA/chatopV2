@@ -18,7 +18,6 @@ maven-package:
     stage : package
     extends : .maven
     script:
-        - mvn clean install
         - mvn package -DskipTests -Ddocker.skip=true
         - rm -rf target/*
     artifacts:
@@ -32,6 +31,7 @@ maven_verify:
     extends: .maven
     dependencies: [maven-package]
     script:
+        - mvn clean install -DskipTests
         - mvn verify -DskipTests -Dmaven.main.skip
 
 docker-image:
