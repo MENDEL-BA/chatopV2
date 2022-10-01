@@ -105,7 +105,7 @@ public class HospitalisationServiceImpl implements HospitalisationService {
 
         List<Lit> litsPatient = litRepository.findByPatient(lit.getPatient());
 
-        litsPatient.forEach(System.out::println);
+       // litsPatient.forEach(System.out::println);
 
         if (lit == null) {
             new MessageResponse("le lit ne peut etre recupere, veuillez verifier votre requete");

@@ -47,7 +47,7 @@ public class ConsultationServiceImpl implements ConsultationService {
 
         Optional<User> medecin = userDetailsServiceInfo.getUser();
 
-        if (medecin.isPresent() || patient == null) {
+        if (!medecin.isPresent() || patient == null) {
             throw new IllegalStateException("Un des parametres est null");
         }
 

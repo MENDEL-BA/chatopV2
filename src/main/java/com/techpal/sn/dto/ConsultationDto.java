@@ -55,5 +55,18 @@ public class ConsultationDto implements Serializable {
         return consultations.stream().map(ConsultationDto::parse).collect(Collectors.toList());
     }
 
-
+    @Override
+    public String toString() {
+        return "ConsultationDto{" +
+                "dateConsultation=" + dateConsultation +
+                ", diagnosticConsultation='" + diagnosticConsultation + '\'' +
+                ", typeConsultation='" + typeConsultation + '\'' +
+                ", prixConsultation='" + prixConsultation + '\'' +
+                ", uidPatient='" + uidPatient + '\'' +
+                ", uidMedecin='" + uidMedecin + '\'' +
+                ", uidConsultation='" + uidConsultation + '\'' +
+                ", infosMedecin='" + infosMedecin + '\'' +
+                ", infosPatient='" + infosPatient + '\'' +
+                '}';
+    }
 }

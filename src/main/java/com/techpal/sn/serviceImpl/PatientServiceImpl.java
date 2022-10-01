@@ -1,11 +1,9 @@
 package com.techpal.sn.serviceImpl;
 
 import com.techpal.sn.dto.PatientDto;
-import com.techpal.sn.models.Meta;
-import com.techpal.sn.models.Patient;
-import com.techpal.sn.models.RendezVous;
-import com.techpal.sn.models.User;
+import com.techpal.sn.models.*;
 import com.techpal.sn.payload.response.MessageResponse;
+import com.techpal.sn.repository.ConsultationRepository;
 import com.techpal.sn.repository.PatientRepository;
 import com.techpal.sn.repository.RendezVousRepository;
 import com.techpal.sn.repository.UserRepository;
@@ -28,11 +26,14 @@ public class PatientServiceImpl implements PatientService {
 
     private final RendezVousRepository rendezVousRepository;
 
-    public PatientServiceImpl(PatientRepository patientRepository, MetaService metaservice, UserRepository userRepository, RendezVousRepository rendezVousRepository) {
+    private final ConsultationRepository consultationRepository;
+
+    public PatientServiceImpl(PatientRepository patientRepository, MetaService metaservice, UserRepository userRepository, RendezVousRepository rendezVousRepository, ConsultationRepository consultationRepository) {
         this.patientRepository = patientRepository;
         this.metaservice = metaservice;
         this.userRepository = userRepository;
         this.rendezVousRepository = rendezVousRepository;
+        this.consultationRepository = consultationRepository;
     }
 
     @Override
@@ -61,7 +62,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Patient updatePatient(PatientDto patientDto) {
-        System.out.println("Im in update");
+       // System.out.println("Im in update");
         if (patientDto == null) {
             throw new IllegalStateException("Un des parametres est null");
         }
@@ -100,6 +101,13 @@ public class PatientServiceImpl implements PatientService {
         }
 
         Patient patient = getPatientByExternalId(uidPatient);
+        patient.getRendezVous().forEach(rendezVous -> {
+            rendezVousRepository.delete(rendezVous);
+        });
+
+        patient.getConsultations().forEach(consultation -> {
+            consultationRepository.delete(consultation);
+        });
 
         patientRepository.delete(patient);
     }

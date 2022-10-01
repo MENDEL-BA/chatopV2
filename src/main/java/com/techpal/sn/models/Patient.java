@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -73,7 +76,8 @@ public class Patient {
     @JsonIgnoreProperties(value = { "lits", "patient" }, allowSetters = true)
     private Set<Chambre> chambres = new HashSet<>();*/
 
-    @OneToMany(mappedBy = "patient")
+    @OneToMany(mappedBy = "patient",cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnoreProperties(value = { "patient" }, allowSetters = true)
     private Set<Consultation> consultations = new HashSet<>();
 

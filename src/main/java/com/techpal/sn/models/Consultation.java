@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -40,8 +42,9 @@ public class Consultation {
     @Column(name = "prix_consultation")
     private String prixConsultation;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties(allowSetters = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Patient patient;
 
     @ManyToOne

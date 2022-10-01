@@ -76,6 +76,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserDetailsSe
 
 		Optional<User> user = Optional.ofNullable(userRepository.findByUsername(username).
 				orElseThrow(() -> new RuntimeException("Error: Role is not found.")));
+		System.out.println("le user est "+user.get().getLinkedMeta().getExternalId());
 		return user;
 	}
 
