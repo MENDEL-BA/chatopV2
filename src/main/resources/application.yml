@@ -6,13 +6,11 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://82.165.113.198:5432/clinic_v2
-    #username: postgres
     username: mendel
     password: clinic123
   jpa:
     hibernate:
       ddl-auto: update
-      reload: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
