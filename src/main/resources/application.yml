@@ -6,8 +6,8 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://82.165.113.198:5432/clinic_v2
-    username: mendel
-    password: clinic123
+    username: postgres
+    password: 
   jpa:
     hibernate:
       ddl-auto: update
