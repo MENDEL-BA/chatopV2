@@ -1,6 +1,10 @@
 package com.techpal.sn.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -13,13 +17,14 @@ public class Role {
 	@Column(length = 20)
 	private ERole name;
 
-	public Role() {
-
-	}
-
-	public Role(ERole name) {
-		this.name = name;
-	}
+	@ManyToMany(fetch = FetchType.LAZY,
+			cascade = {
+					CascadeType.PERSIST,
+					CascadeType.MERGE
+			},
+			mappedBy = "roles")
+	@JsonIgnore
+	private Set<User> users = new HashSet<>();
 
 	public Integer getId() {
 		return id;
@@ -35,5 +40,13 @@ public class Role {
 
 	public void setName(ERole name) {
 		this.name = name;
+	}
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
 	}
 }

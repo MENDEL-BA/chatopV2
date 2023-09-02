@@ -1,106 +1,59 @@
 package com.techpal.sn.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.techpal.sn.payload.request.SignupRequest;
-import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.AllArgsConstructor;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.*;
 
 @Entity
-@Table(	name = "users", 
-		uniqueConstraints = { 
-			@UniqueConstraint(columnNames = "username"),
-			@UniqueConstraint(columnNames = "email") 
-		})
-public class User {
-	@Id
+@Table(	name = "users")
+@AllArgsConstructor
+public class User implements UserDetails {
+    @Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    private Long id;
 
-	@NotBlank
-	@Size(max = 20)
-	private String username;
+    private String email;
 
-	@NotBlank
-	@Size(max = 50)
-	@Email
-	private String email;
+    private String password;
 
-	@NotBlank
-	@Size(max = 120)
-	private String password;
+	private String name;
 
-	//@NotBlank
-	@Size(max = 120)
-	private String firstName;
+	private Date createdAt;
 
-	//@NotBlank
-	@Size(max = 120)
-	private String lastName;
+    private Date updatedAt;
 
-	//@NotBlank
-	@Size(max = 120)
-	private String numeroTelephone;
-
-
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(	name = "user_roles", 
-				joinColumns = @JoinColumn(name = "user_id"), 
-				inverseJoinColumns = @JoinColumn(name = "role_id"))
+	@ManyToMany(fetch = FetchType.LAZY,
+			cascade = {
+					CascadeType.PERSIST,
+					CascadeType.MERGE
+			})
+	@JoinTable(
+			name = "users_roles",
+			joinColumns = @JoinColumn(
+					name = "user_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(
+					name = "role_id", referencedColumnName = "id"))
 	private Set<Role> roles = new HashSet<>();
 
-	@JsonIgnore
-	@JoinColumn(name = "linked_meta", referencedColumnName = "id", nullable = false)
-	@OneToOne(optional = false)
-	private Meta linkedMeta;
-
-	@OneToOne
-	private SpecialiteMedecin specialiteMedecin;
-
-	private String location;
+	public User(@NotBlank @Size(max = 50) @Email String email, String password) {
+		this.email = email;
+		this.password = password;
+	}
 
 	public User() {
 	}
 
-	public User(String username, String email, String password) {
-		this.username = username;
+	public User(String email, String password, String name) {
 		this.email = email;
 		this.password = password;
-	}
-
-	public User(String username, String email, String password,
-				String firstName, String lastName,
-				String numeroTelephone) {
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.numeroTelephone = numeroTelephone;
-	}
-
-	public User(String username, String email, String password, String firstName, String lastName,
-				String numeroTelephone, Set<Role> roles, Meta linkedMeta, SpecialiteMedecin specialiteMedecin,
-				String location) {
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.numeroTelephone = numeroTelephone;
-		this.roles = roles;
-		this.linkedMeta = linkedMeta;
-		this.specialiteMedecin = specialiteMedecin;
-		this.location = location;
+		this.name = name;
 	}
 
 	public Long getId() {
@@ -111,14 +64,6 @@ public class User {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -127,12 +72,70 @@ public class User {
 		this.email = email;
 	}
 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		for (Role role : roles) {
+			authorities.add(new SimpleGrantedAuthority(role.getName().name()));
+		}
+		return authorities;
+	}
+
 	public String getPassword() {
 		return password;
 	}
 
+	@Override
+	public String getUsername() {
+		return this.name;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	public Set<Role> getRoles() {
@@ -141,53 +144,5 @@ public class User {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
-	}
-
-	public Meta getLinkedMeta() {
-		return linkedMeta;
-	}
-
-	public void setLinkedMeta(Meta linkedMeta) {
-		this.linkedMeta = linkedMeta;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getNumeroTelephone() {
-		return numeroTelephone;
-	}
-
-	public void setNumeroTelephone(String numeroTelephone) {
-		this.numeroTelephone = numeroTelephone;
-	}
-
-	public SpecialiteMedecin getSpecialiteMedecin() {
-		return specialiteMedecin;
-	}
-
-	public void setSpecialiteMedecin(SpecialiteMedecin specialiteMedecin) {
-		this.specialiteMedecin = specialiteMedecin;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
 	}
 }

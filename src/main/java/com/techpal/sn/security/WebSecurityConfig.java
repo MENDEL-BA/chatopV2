@@ -62,12 +62,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.authorizeRequests().antMatchers("/api/auth/**").permitAll()
 			.antMatchers("/api/test/**").permitAll()
-			.antMatchers("/api/auth/getMedecinsByLocationAndSpecialite").permitAll()
-			//.antMatchers("/swagger2-demo/swagger-ui.html").permitAll()
-			//.antMatchers("/swagger-ui/**").permitAll()
-			//.antMatchers("/swagger-ui.html").permitAll()
-			//.antMatchers("/v2/api-docs").permitAll()
-			.antMatchers("/stomp").permitAll() // On autorise l'appel handshake entre le client et le serveur
+			.antMatchers("/swagger2-demo/swagger-ui.html").permitAll()
+			.antMatchers("/swagger-ui/**").permitAll()
+			.antMatchers("/swagger-ui.html").permitAll()
+			.antMatchers("/v2/api-docs").permitAll()
 			.anyRequest().authenticated();
 
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

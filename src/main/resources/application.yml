@@ -5,20 +5,23 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/clinic_v2
-    username: mendel
-    password: clinic123
+    url: jdbc:mysql://127.0.0.1:3306/testdb?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password:
+    initialization-mode: never
   jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: MYSQL
+    show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
         jdbc:
           lob:
             non_contextual_creation: true
-    show-sql: false
   mvc:
     dispatch-options-request: true
   mail:
@@ -39,5 +42,8 @@ spring:
           timeout: 3000
           writetimeout: 5000
 
-bezkoder.app.jwtSecret: bezKoderSecretKey
+bezkoder.app.jwtSecret: N2U3YThkNWIzYzYzNDI5ODlhMWU4MDczZTMxNmM2ODUyNzNjZmI3ZjQzMjkyNGQyOTI0NGJjOGMwM2U5YTFkODlhODRjMjhjMTYxNzI1YjNlMjQzYjIxOTBmZmYzNjkzMGZiMTQzMmU0NjIzM2ZiMWY1MDQzMThlYjYxOThlZGU=
 bezkoder.app.jwtExpirationMs: 86400000
+bezkoder:
+  app:
+    jwtCookieName: security

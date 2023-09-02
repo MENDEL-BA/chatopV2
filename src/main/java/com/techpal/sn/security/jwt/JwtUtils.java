@@ -1,16 +1,16 @@
 package com.techpal.sn.security.jwt;
 
-import java.util.Date;
-
-import com.techpal.sn.security.services.UserDetailsImpl;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.*;
-
+import java.security.Key;
+import java.util.Date;
 @Component
 public class JwtUtils {
 	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
@@ -20,16 +20,22 @@ public class JwtUtils {
 
 	@Value("${bezkoder.app.jwtExpirationMs}")
 	private int jwtExpirationMs;
+	@Value("${bezkoder.app.jwtCookieName}")
+	private String jwtCookie;
 
+	private Key getSigningKey() {
+		byte[] keyBytes = Decoders.BASE64.decode(this.jwtSecret);
+		return Keys.hmacShaKeyFor(keyBytes);
+	}
 	public String generateJwtToken(Authentication authentication) {
 
-		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+		Object userPrincipal = authentication.getPrincipal();
 
 		return Jwts.builder()
-				.setSubject((userPrincipal.getUsername()))
+				.setSubject((userPrincipal.toString()))
 				.setIssuedAt(new Date())
 				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-				.signWith(SignatureAlgorithm.HS512, jwtSecret)
+				.signWith( getSigningKey())
 				.compact();
 	}
 
@@ -54,5 +60,16 @@ public class JwtUtils {
 		}
 
 		return false;
+	}
+	public String generateTokenFromEmail(String email) {
+		return Jwts.builder()
+				.setSubject(email)
+				.setIssuedAt(new Date())
+				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+				.signWith(SignatureAlgorithm.HS256, key())
+				.compact();
+	}
+	private Key key() {
+		return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
 	}
 }
