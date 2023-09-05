@@ -1,4 +1,4 @@
-# clinic_api_v3
+# chatop_api_v1
 
 
 
@@ -15,7 +15,7 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.com/MENDEL-BA/clinic_api_v3.git
+git remote add origin https://github.com/MENDEL-BA/chatopV2
 git branch -M main
 git push -uf origin main
 ```
