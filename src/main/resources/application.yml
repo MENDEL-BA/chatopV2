@@ -24,23 +24,6 @@ spring:
             non_contextual_creation: true
   mvc:
     dispatch-options-request: true
-  mail:
-    host: localhost
-    port: 1025
-    username: hello
-    password: hello
-
-    properties:
-      mail:
-        smtp:
-          ssl:
-            trust: "*"
-          auth: true
-          starttls:
-            enable: true
-          connectiontimeout: 5000
-          timeout: 3000
-          writetimeout: 5000
 
 bezkoder.app.jwtSecret: N2U3YThkNWIzYzYzNDI5ODlhMWU4MDczZTMxNmM2ODUyNzNjZmI3ZjQzMjkyNGQyOTI0NGJjOGMwM2U5YTFkODlhODRjMjhjMTYxNzI1YjNlMjQzYjIxOTBmZmYzNjkzMGZiMTQzMmU0NjIzM2ZiMWY1MDQzMThlYjYxOThlZGU=
 bezkoder.app.jwtExpirationMs: 86400000
