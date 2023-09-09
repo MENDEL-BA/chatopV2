@@ -1,6 +1,7 @@
 package com.techpal.sn.services;
 
-import com.techpal.sn.models.Message;
+import com.techpal.sn.dto.MessageDTO;
+import com.techpal.sn.models.Messages;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,10 +9,10 @@ import java.util.List;
 @Service
 public interface MessageService {
     
-     Message addMessage(Message message);
+     Messages addMessage(MessageDTO message);
 
-     List<Message> getAllMessages();
+     List<Messages> getAllMessages();
 
-     Message getMessageById(Long id);
+     Messages getMessageById(Long id);
 
 }

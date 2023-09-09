@@ -1,6 +1,7 @@
 package com.techpal.sn.controllers;
 
-import com.techpal.sn.models.Message;
+import com.techpal.sn.dto.MessageDTO;
+import com.techpal.sn.models.Messages;
 import com.techpal.sn.repository.MessageRepository;
 import com.techpal.sn.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.time.Instant;
 import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/messages")
+@RequestMapping("/api/messages")
 public class MessageController {
 
     private final MessageService messageService;
@@ -26,46 +27,46 @@ public class MessageController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Message>> getAllMessages() {
-        List<Message> messages = messageService.getAllMessages();
+    public ResponseEntity<List<Messages>> getAllMessages() {
+        List<Messages> messages = messageService.getAllMessages();
         return ResponseEntity.ok(messages);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Message> getMessageById(@PathVariable Long id) {
-        Message message = messageService.getMessageById(id);
-        if (message == null) {
+    public ResponseEntity<Messages> getMessageById(@PathVariable Long id) {
+        Messages messages = messageService.getMessageById(id);
+        if (messages == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(message);
+        return ResponseEntity.ok(messages);
     }
 
     @PostMapping
-    public ResponseEntity<Message> createMessage(@RequestBody Message message) {
-        Message savedMessage = messageService.addMessage(message);
-        return ResponseEntity.ok(savedMessage);
+    public ResponseEntity<Messages> createMessage(@RequestBody MessageDTO messages) {
+        Messages savedMessages = messageService.addMessage(messages);
+        return ResponseEntity.ok(savedMessages);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Message> updateMessage(@PathVariable Long id, @RequestBody Message message) {
-        Message existingMessage = messageService.getMessageById(id);
+    public ResponseEntity<Messages> updateMessage(@PathVariable Long id, @RequestBody Messages messages) {
+        Messages existingMessages = messageService.getMessageById(id);
         
-        if (existingMessage == null) {
+        if (existingMessages == null) {
             return ResponseEntity.notFound().build();
         }
         
-        existingMessage.setMessage(message.getMessage());
-        existingMessage.setUpdatedAt(Timestamp.from(Instant.now()));
+        existingMessages.setMessage(messages.getMessage());
+        existingMessages.setUpdatedAt(Timestamp.from(Instant.now()));
         
-        Message updatedMessage = messageRepository.save(existingMessage);
-        return ResponseEntity.ok(updatedMessage);
+        Messages updatedMessages = messageRepository.save(existingMessages);
+        return ResponseEntity.ok(updatedMessages);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteMessage(@PathVariable Long id) {
-        Message existingMessage = messageService.getMessageById(id);
+        Messages existingMessages = messageService.getMessageById(id);
         
-        if (existingMessage == null) {
+        if (existingMessages == null) {
             return ResponseEntity.notFound().build();
         }
         

@@ -2,6 +2,7 @@ package com.techpal.sn.controllers;
 
 
 import com.techpal.sn.dto.RentalDTO;
+import com.techpal.sn.dto.RentalsResponse;
 import com.techpal.sn.models.Rentals;
 import com.techpal.sn.models.UserEntity;
 import com.techpal.sn.repository.RentalRepository;
@@ -21,7 +22,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin
 @RestController
 @RequestMapping("api/rentals")
 public class RentalsController {
@@ -42,6 +44,7 @@ public class RentalsController {
         this.userRepository = userRepository;
     }
 
+    @CrossOrigin
     @PostMapping
     public ResponseEntity<?> createRental(@RequestParam("name") String name,
                                           @RequestParam("surface") Double surface,
@@ -52,7 +55,7 @@ public class RentalsController {
         Rentals rental = new Rentals();
         rental.setDescription(description);
         rental.setName(name);
-        rental.setPicture(picture.getName());
+        rental.setPicture(picture.getOriginalFilename());
         rental.setSurface(BigDecimal.valueOf(surface));
         rental.setPrice(BigDecimal.valueOf(price));
         rental.setSurface(BigDecimal.valueOf(surface));
@@ -67,11 +70,13 @@ public class RentalsController {
 
     }
 
+    @CrossOrigin
     @GetMapping
     public ResponseEntity<?> getAllRentals() {
         List<RentalDTO> rentals = rentalService.getAllRentals();
-
-        return ResponseEntity.ok(rentals);
+        RentalsResponse rentalsResponse = new RentalsResponse();
+        rentalsResponse.setRentals(rentals);
+        return ResponseEntity.ok(rentalsResponse);
     }
 
     @PutMapping("/{id}")
@@ -92,6 +97,17 @@ public class RentalsController {
         return ResponseEntity.ok(updatedRental);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Rentals> detailRentals(@PathVariable String id) {
+        long idR = Long.parseLong(id);
+        Rentals existingRental = rentalService.getRentalsById(idR);
+
+        if (existingRental == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(existingRental);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteRental(@PathVariable Long id) {
         Rentals existingRental = rentalService.getRentalsById(id);
@@ -102,6 +118,9 @@ public class RentalsController {
         
         rentalService.deleteRental(id);
         return ResponseEntity.noContent().build();
+    }
+    @RequestMapping(value = "/",method = RequestMethod.OPTIONS)
+    public void handleOptionsRequest() {
     }
 
 }
