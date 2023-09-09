@@ -86,6 +86,5 @@ public class AuthController {
 
     @RequestMapping(value = "/",method = RequestMethod.OPTIONS)
     public void handleOptionsRequest() {
-        System.out.println("$$$$$$$$$$");
     }
 }

@@ -28,6 +28,6 @@ public class RentalUserMessage implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "message_id")
-    private Message message;
+    private Messages messages;
 
 }
