@@ -8,6 +8,7 @@ import com.techpal.sn.payload.response.AuthSuccess;
 import com.techpal.sn.repository.RoleRepository;
 import com.techpal.sn.repository.UserRepository;
 import com.techpal.sn.security.JWTGenerator;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
+@Api(description = "Account management APIs")
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -44,7 +46,14 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<?> login(@RequestBody LoginDto loginDto){
+    @ApiOperation(
+            value = "Api pour se connecter generation JWT token")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully logged in and JWT token generated"),
+            @ApiResponse(code = 401, message = "Access denied, token manquant"),
+            @ApiResponse(code = 403, message = "Authentication failed")
+    })
+    public ResponseEntity<?> login(@ApiParam(value = "le corps de la requete DTO", required = true) @RequestBody LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                 loginDto.getEmail(),
@@ -56,6 +65,13 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(authSuccess);
     }
     @RequestMapping(method = RequestMethod.GET, value = "/me", produces ={ "application/json" })
+    @ApiOperation(
+            value = "Api pour recuperer les infos de l'utilisateur")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Access denied, token manquant"),
+            @ApiResponse(code = 403, message = "Recuperation failed")
+    })
     public ResponseEntity<?>  getUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.getPrincipal() == null) {
@@ -63,10 +79,21 @@ public class AuthController {
         }
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
         Optional<UserEntity> userEntity = userRepository.findByEmail(userDetails.getUsername());
-        return ResponseEntity.ok(userEntity);
+        UserInfoResponse userDTO = new UserInfoResponse();
+        userDTO.setId(Long.valueOf(userEntity.get().getId()));
+        userDTO.setName(userEntity.get().getName());
+        userDTO.setEmail(userEntity.get().getEmail());
+        return ResponseEntity.ok(userDTO);
     }
     @PostMapping("register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+    @ApiOperation(
+            value = "Api pour s'enregistrer l'utilisateur")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Access denied, token manquant"),
+            @ApiResponse(code = 403, message = "Recuperation failed")
+    })
+    public ResponseEntity<String> register(@ApiParam(value = "le corps de la requete DTO", required = true)@RequestBody RegisterDto registerDto) {
         if (userRepository.existsByEmail(registerDto.getEmail())) {
             return new ResponseEntity<>("Email is taken!", HttpStatus.BAD_REQUEST);
         }
