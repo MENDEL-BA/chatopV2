@@ -28,5 +28,4 @@ public class SpringBootSecurityJwtApplication {
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder().title("").description("").version("1.0").build();
 	}
-
 }

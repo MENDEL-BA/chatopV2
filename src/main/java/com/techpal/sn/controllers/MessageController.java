@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin
 @RestController
 @RequestMapping("/api/messages")
 public class MessageController {
@@ -26,12 +26,13 @@ public class MessageController {
         this.messageRepository = messageRepository;
     }
 
+    @CrossOrigin
     @GetMapping
     public ResponseEntity<List<Messages>> getAllMessages() {
         List<Messages> messages = messageService.getAllMessages();
         return ResponseEntity.ok(messages);
     }
-
+    @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity<Messages> getMessageById(@PathVariable Long id) {
         Messages messages = messageService.getMessageById(id);
@@ -40,13 +41,13 @@ public class MessageController {
         }
         return ResponseEntity.ok(messages);
     }
-
+    @CrossOrigin
     @PostMapping
     public ResponseEntity<Messages> createMessage(@RequestBody MessageDTO messages) {
         Messages savedMessages = messageService.addMessage(messages);
         return ResponseEntity.ok(savedMessages);
     }
-
+    @CrossOrigin
     @PutMapping("/{id}")
     public ResponseEntity<Messages> updateMessage(@PathVariable Long id, @RequestBody Messages messages) {
         Messages existingMessages = messageService.getMessageById(id);
@@ -61,7 +62,7 @@ public class MessageController {
         Messages updatedMessages = messageRepository.save(existingMessages);
         return ResponseEntity.ok(updatedMessages);
     }
-
+    @CrossOrigin
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteMessage(@PathVariable Long id) {
         Messages existingMessages = messageService.getMessageById(id);
@@ -73,5 +74,7 @@ public class MessageController {
         messageRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
+    @RequestMapping(value = "/",method = RequestMethod.OPTIONS)
+    public void handleOptionsRequest() {
+    }
 }

@@ -27,8 +27,6 @@ public class JWTGenerator {
 				.setExpiration(expireDate)
 				.signWith(key,SignatureAlgorithm.HS512)
 				.compact();
-		System.out.println("New token :");
-		System.out.println(token);
 		return token;
 	}
 	public String getUsernameFromJWT(String token){
