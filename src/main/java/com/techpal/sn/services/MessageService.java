@@ -15,4 +15,8 @@ public interface MessageService {
 
      Messages getMessageById(Long id);
 
+     void deleteMessage(Long Id);
+
+     Messages updateMessage(Long id, MessageDTO messageDTO);
+
 }

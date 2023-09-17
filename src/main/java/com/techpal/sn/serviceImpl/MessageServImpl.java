@@ -9,6 +9,7 @@ import com.techpal.sn.repository.RentalRepository;
 import com.techpal.sn.repository.UserRepository;
 import com.techpal.sn.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -54,6 +55,30 @@ public class MessageServImpl implements MessageService {
     public Messages getMessageById(Long id) {
         return messageRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Messages not found"));
+    }
+
+    @Override
+    public void deleteMessage(Long Id) {
+        Messages existingMessages = getMessageById(Id);
+
+        if (existingMessages == null) {
+            ResponseEntity.notFound().build();
+        }
+        messageRepository.deleteById(existingMessages.getId());
+    }
+
+    @Override
+    public Messages updateMessage(Long id, MessageDTO messageDTO) {
+        Messages existingMessages = getMessageById(id);
+
+        if (existingMessages == null) {
+             ResponseEntity.notFound().build();
+        }
+
+        existingMessages.setMessage(messageDTO.getMessage());
+        existingMessages.setUpdatedAt(Timestamp.from(Instant.now()));
+
+        return messageRepository.save(existingMessages);
     }
 
 }

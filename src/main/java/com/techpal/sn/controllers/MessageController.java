@@ -2,18 +2,16 @@ package com.techpal.sn.controllers;
 
 import com.techpal.sn.dto.MessageDTO;
 import com.techpal.sn.models.Messages;
-import com.techpal.sn.repository.MessageRepository;
 import com.techpal.sn.services.MessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
 @CrossOrigin
 @RestController
@@ -23,12 +21,9 @@ public class MessageController {
 
     private final MessageService messageService;
 
-    private final MessageRepository messageRepository;
-
     @Autowired
-    public MessageController(MessageService messageService,MessageRepository messageRepository) {
+    public MessageController(MessageService messageService) {
         this.messageService = messageService;
-        this.messageRepository = messageRepository;
     }
 
     @CrossOrigin
@@ -42,7 +37,7 @@ public class MessageController {
     })
     public ResponseEntity<List<Messages>> getAllMessages() {
         List<Messages> messages = messageService.getAllMessages();
-        return ResponseEntity.ok(messages);
+        return ResponseEntity.status(HttpStatus.OK).body(messages);
     }
     @CrossOrigin
     @GetMapping("/{id}")
@@ -58,7 +53,7 @@ public class MessageController {
         if (messages == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(messages);
+        return ResponseEntity.status(HttpStatus.OK).body(messages);
     }
     @CrossOrigin
     @PostMapping
@@ -71,7 +66,7 @@ public class MessageController {
     })
     public ResponseEntity<Messages> createMessage(@RequestBody MessageDTO messages) {
         Messages savedMessages = messageService.addMessage(messages);
-        return ResponseEntity.ok(savedMessages);
+        return ResponseEntity.status(HttpStatus.OK).body(savedMessages);
     }
     @CrossOrigin
     @PutMapping("/{id}")
@@ -82,18 +77,11 @@ public class MessageController {
             @ApiResponse(code = 401, message = "Access denied, token manquant"),
             @ApiResponse(code = 403, message = "Recuperation failed")
     })
-    public ResponseEntity<Messages> updateMessage(@PathVariable Long id, @RequestBody Messages messages) {
-        Messages existingMessages = messageService.getMessageById(id);
-        
-        if (existingMessages == null) {
-            return ResponseEntity.notFound().build();
-        }
-        
-        existingMessages.setMessage(messages.getMessage());
-        existingMessages.setUpdatedAt(Timestamp.from(Instant.now()));
-        
-        Messages updatedMessages = messageRepository.save(existingMessages);
-        return ResponseEntity.ok(updatedMessages);
+    public ResponseEntity<Messages> updateMessage(@PathVariable Long id, @RequestBody MessageDTO messagesDTO) {
+        Messages messages = messageService.updateMessage(id,messagesDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(messages);
+
+  
     }
     @CrossOrigin
     @DeleteMapping("/{id}")
@@ -105,14 +93,8 @@ public class MessageController {
             @ApiResponse(code = 403, message = "Recuperation failed")
     })
     public ResponseEntity<?> deleteMessage(@PathVariable Long id) {
-        Messages existingMessages = messageService.getMessageById(id);
-        
-        if (existingMessages == null) {
-            return ResponseEntity.notFound().build();
-        }
-        
-        messageRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+         messageService.deleteMessage(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
     @RequestMapping(value = "/",method = RequestMethod.OPTIONS)
     public void handleOptionsRequest() {
