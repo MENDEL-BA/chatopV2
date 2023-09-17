@@ -2,12 +2,17 @@ package com.techpal.sn.controllers;
 
 
 import com.techpal.sn.dto.RentalDTO;
+import com.techpal.sn.dto.RentalResponse;
 import com.techpal.sn.dto.RentalsResponse;
 import com.techpal.sn.models.Rentals;
 import com.techpal.sn.models.UserEntity;
 import com.techpal.sn.repository.RentalRepository;
 import com.techpal.sn.repository.UserRepository;
 import com.techpal.sn.services.RentalService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +33,7 @@ import java.util.Optional;
 @CrossOrigin
 @RestController
 @RequestMapping("api/rentals")
+@Api(description = "Rentals management APIs")
 public class RentalsController {
 
     private static final String IMAGE_UPLOAD_DIR = "chemin/vers/dossier/images/";
@@ -48,6 +54,13 @@ public class RentalsController {
 
     @CrossOrigin
     @PostMapping
+    @ApiOperation(
+            value = "Api pour la creation d'un Objet Rental")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Access denied, token manquant"),
+            @ApiResponse(code = 403, message = "Recuperation failed")
+    })
     public ResponseEntity<?> createRental(@RequestParam("name") String name,
                                           @RequestParam("surface") Double surface,
                                           @RequestParam("price") Double price,
@@ -75,6 +88,13 @@ public class RentalsController {
 
     @CrossOrigin
     @GetMapping
+    @ApiOperation(
+            value = "Api pour recuperer les rentals")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Access denied, token manquant"),
+            @ApiResponse(code = 403, message = "Recuperation failed")
+    })
     public ResponseEntity<?> getAllRentals() {
         List<RentalDTO> rentals = rentalService.getAllRentals();
         RentalsResponse rentalsResponse = new RentalsResponse();
@@ -83,7 +103,14 @@ public class RentalsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateRental(@PathVariable long id, @RequestParam("name") String name,
+    @ApiOperation(
+            value = "Api pour la modification d'un rental")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Access denied, token manquant"),
+            @ApiResponse(code = 403, message = "Recuperation failed")
+    })
+    public ResponseEntity<RentalResponse> updateRental(@PathVariable long id, @RequestParam("name") String name,
                                                @RequestParam("surface") Double surface,
                                                @RequestParam("price") Double price,
                                                @RequestParam("description") String description) {
@@ -101,10 +128,19 @@ public class RentalsController {
         existingRental.setSurface(BigDecimal.valueOf(surface));
         
         rentalRepository.save(existingRental);
-        return ResponseEntity.ok(HttpStatus.OK.toString());
+        RentalResponse rentalResponse = new RentalResponse();
+        rentalResponse.setMessage(HttpStatus.OK.toString());
+        return ResponseEntity.ok(rentalResponse);
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(
+            value = "Api pour recuperer un rental par son ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Access denied, token manquant"),
+            @ApiResponse(code = 403, message = "Recuperation failed")
+    })
     public ResponseEntity<RentalDTO> detailRentals(@PathVariable String id) {
         long idR = Long.parseLong(id);
         Rentals existingRental = rentalService.getRentalsById(idR);
@@ -126,6 +162,13 @@ public class RentalsController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(
+            value = "Api pour supprimmer un rental par son ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Access denied, token manquant"),
+            @ApiResponse(code = 403, message = "Recuperation failed")
+    })
     public ResponseEntity<?> deleteRental(@PathVariable Long id) {
         Rentals existingRental = rentalService.getRentalsById(id);
         
