@@ -10,13 +10,22 @@ import java.util.List;
 @Service
 public interface RentalService {
     
-     Rentals addRentals(Rentals rentals);
-
+     Rentals addRentals(String name,
+                        Double surface,
+                        Double price,
+                        String description,
+                        MultipartFile picture) throws IOException;
+     Rentals updateRental(long id,String name,
+                                 Double surface,
+                                 Double price,
+                                 String description);
      List<RentalDTO> getAllRentals();
 
      Rentals getRentalsById(Long id);
 
      void deleteRental(Long id);
+
+     RentalDTO detailRentals(long id);
 
      String saveImage(MultipartFile imageFile) throws IOException;
 }
