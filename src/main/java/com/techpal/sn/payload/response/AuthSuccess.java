@@ -10,4 +10,13 @@ public class AuthSuccess {
     public AuthSuccess(String token) {
         this.token = token;
     }
+    public AuthSuccess() {
+    }
+
+    @Override
+    public String toString() {
+        return "AuthSuccess{" +
+                "token='" + token + '\'' +
+                '}';
+    }
 }
