@@ -38,6 +38,9 @@ Create Database chatopdb
 ```
 - [ ] [Run application](https://gitlab.com/-/experiment/new_project_readme_content:02dabd3766913935689dcab8513bbde9?https://gitlab.com/MENDEL-BA/clinic_api_v3/-/settings/integrations)
 ```
+Place the application.properties in repertory
+Modify the path in annotation @Propertysource in class Main SpringBootSecurityJwtApplication.java
+Put the Path to your application.properties
 schema is automatically create if the the application run 
 Run the main class
 ```
