@@ -4,6 +4,7 @@ import com.techpal.sn.dto.LoginDto;
 import com.techpal.sn.dto.RegisterDto;
 import com.techpal.sn.payload.response.AuthSuccess;
 import com.techpal.sn.services.UserServices;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
+@Api(description = "Account management APIs")
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -22,19 +24,40 @@ public class AuthController {
 
     @CrossOrigin
     @PostMapping("login")
-    public ResponseEntity<AuthSuccess> login(@RequestBody LoginDto loginDto){
+    @ApiOperation(
+            value = "Api pour se connecter generation JWT token")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully logged in and JWT token generated"),
+            @ApiResponse(code = 401, message = "Access denied, token manquant"),
+            @ApiResponse(code = 403, message = "Authentication failed")
+    })
+    public ResponseEntity<?> login(@ApiParam(value = "le corps de la requete DTO", required = true) @RequestBody LoginDto loginDto){
         AuthSuccess authSuccess = userServices.loggedIn(loginDto);
         return ResponseEntity.status(HttpStatus.OK).body(authSuccess);
     }
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, value = "/me", produces ={ "application/json" })
-    public ResponseEntity<UserInfoResponse>  getUser() {
+    @ApiOperation(
+            value = "Api pour recuperer les infos de l'utilisateur")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Access denied, token manquant"),
+            @ApiResponse(code = 403, message = "Recuperation failed")
+    })
+    public ResponseEntity<?>  getUser() {
         UserInfoResponse userInfoResponse = userServices.getUser();
         return ResponseEntity.ok(userInfoResponse);
     }
     @CrossOrigin
     @PostMapping("register")
-    public ResponseEntity<AuthSuccess> register(@RequestBody RegisterDto registerDto) {
+    @ApiOperation(
+            value = "Api pour s'enregistrer l'utilisateur")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully "),
+            @ApiResponse(code = 401, message = "Access denied, token manquant"),
+            @ApiResponse(code = 403, message = "Recuperation failed")
+    })
+    public ResponseEntity<AuthSuccess> register(@ApiParam(value = "le corps de la requete DTO", required = true)@RequestBody RegisterDto registerDto) {
         AuthSuccess authSuccess = userServices.register(registerDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(authSuccess);
