@@ -7,6 +7,7 @@ import com.techpal.sn.repository.RentalRepository;
 import com.techpal.sn.repository.UserRepository;
 import com.techpal.sn.services.RentalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +30,8 @@ import java.util.UUID;
 @Service
 public class RentalsServImpl implements RentalService {
 
-    private final String imageUploadPath = "/Users/mendel/Documents/imagesRental";
+    @Value("${file.path.rental}")
+    private String imageUploadPath;
 
     private final RentalRepository rentalsRepository;
 
