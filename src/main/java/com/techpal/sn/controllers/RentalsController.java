@@ -26,8 +26,6 @@ import java.util.List;
 @Api(description = "Rentals management APIs")
 public class RentalsController {
 
-    private static final String IMAGE_UPLOAD_DIR = "chemin/vers/dossier/images/";
-
     private final RentalService rentalService;
     @Autowired
     public RentalsController(RentalService rentalService) {
