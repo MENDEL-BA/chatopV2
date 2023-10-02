@@ -19,7 +19,7 @@ public interface RentalService {
                                  Double surface,
                                  Double price,
                                  String description);
-     List<RentalDTO> getAllRentals();
+     List<Rentals> getAllRentals();
 
      Rentals getRentalsById(Long id);
 

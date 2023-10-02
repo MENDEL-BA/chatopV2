@@ -1,6 +1,5 @@
 package com.techpal.sn.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,13 +21,10 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
-        // securedEnabled = true,
-        // jsr250Enabled = true,
         prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtAuthEntryPoint authEntryPoint;
-    @Autowired
     public SecurityConfig(JwtAuthEntryPoint authEntryPoint) {
         this.authEntryPoint = authEntryPoint;
     }
@@ -42,6 +38,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        /*http.csrf().disable()
+                .cors().configurationSource(request -> {
+                    CorsConfiguration configuration = new CorsConfiguration();
+                    configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+                    configuration.setAllowedMethods(List.of("POST","GET","PUT","OPTIONS","DELETE"));
+                    configuration.setAllowedHeaders(List.of("*"));
+                    return configuration;
+                }).and()*/
         http.csrf().disable()
                 .cors().configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
@@ -56,9 +60,8 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/swagger-ui.html", "/v2/api-docs", "/swagger-resources/**", "/webjars/**","/api/auth/login","/api/auth/register").permitAll()
                 //.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .httpBasic();
+                .anyRequest().authenticated();
+
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
 

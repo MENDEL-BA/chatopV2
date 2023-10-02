@@ -4,25 +4,31 @@ import com.techpal.sn.dto.LoginDto;
 import com.techpal.sn.dto.RegisterDto;
 import com.techpal.sn.payload.response.AuthSuccess;
 import com.techpal.sn.services.UserServices;
-import io.swagger.annotations.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api(description = "Account management APIs")
 @RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserServices userServices;
-    @Autowired
+
     public AuthController(UserServices userServices) {
         this.userServices = userServices;
     }
 
-    @CrossOrigin
+    
     @PostMapping("login")
     @ApiOperation(
             value = "Api pour se connecter generation JWT token")
@@ -35,10 +41,10 @@ public class AuthController {
         AuthSuccess authSuccess = userServices.loggedIn(loginDto);
         return ResponseEntity.status(HttpStatus.OK).body(authSuccess);
     }
-    @CrossOrigin
+    
     @RequestMapping(method = RequestMethod.GET, value = "/me", produces ={ "application/json" })
     @ApiOperation(
-            value = "Api pour recuperer les infos de l'utilisateur")
+            value = "Api pour recuperer les infos de l'utilisateur",authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully "),
             @ApiResponse(code = 401, message = "Access denied, token manquant"),
@@ -48,7 +54,7 @@ public class AuthController {
         UserInfoResponse userInfoResponse = userServices.getUser();
         return ResponseEntity.ok(userInfoResponse);
     }
-    @CrossOrigin
+    
     @PostMapping("register")
     @ApiOperation(
             value = "Api pour s'enregistrer l'utilisateur")
@@ -62,8 +68,5 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(authSuccess);
     }
-    @CrossOrigin
-    @RequestMapping(value = "/",method = RequestMethod.OPTIONS)
-    public void handleOptionsRequest() {
-    }
+
 }

@@ -10,7 +10,6 @@ import com.techpal.sn.repository.RoleRepository;
 import com.techpal.sn.repository.UserRepository;
 import com.techpal.sn.security.JWTGenerator;
 import com.techpal.sn.services.UserServices;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +32,6 @@ public class UserServicesImpl implements UserServices {
     private final PasswordEncoder passwordEncoder;
 
 
-    @Autowired
     public UserServicesImpl(UserRepository userRepository, RoleRepository roleRepository, AuthenticationManager authenticationManager, JWTGenerator jwtGenerator, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;

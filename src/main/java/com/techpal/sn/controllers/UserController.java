@@ -5,27 +5,28 @@ import com.techpal.sn.repository.UserRepository;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.annotations.Authorization;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
     private final UserRepository userRepository;
 
-    @Autowired
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @GetMapping("/{id}")
     @ApiOperation(
-            value = "Api pour recuperer les infos de l'utilisateur")
+            value = "Api pour recuperer les infos de l'utilisateur",authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully "),
             @ApiResponse(code = 401, message = "Access denied, token manquant"),

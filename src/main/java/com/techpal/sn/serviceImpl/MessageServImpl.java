@@ -8,7 +8,6 @@ import com.techpal.sn.repository.MessageRepository;
 import com.techpal.sn.repository.RentalRepository;
 import com.techpal.sn.repository.UserRepository;
 import com.techpal.sn.services.MessageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,6 @@ public class MessageServImpl implements MessageService {
 
     private final UserRepository userRepository;
 
-    @Autowired
     private MessageServImpl(MessageRepository messageRepository, RentalRepository rentalRepository,
                             UserRepository userRepository){
         this.messageRepository = messageRepository;

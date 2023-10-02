@@ -6,13 +6,11 @@ import com.techpal.sn.models.UserEntity;
 import com.techpal.sn.repository.RentalRepository;
 import com.techpal.sn.repository.UserRepository;
 import com.techpal.sn.services.RentalService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +27,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Component
 public class RentalsServImpl implements RentalService {
 
     @Value("${file.path.rental}")
@@ -39,7 +36,6 @@ public class RentalsServImpl implements RentalService {
 
     private final UserRepository userRepository;
 
-    @Autowired
     public RentalsServImpl(RentalRepository rentalsRepository, UserRepository userRepository) {
         this.rentalsRepository = rentalsRepository;
         this.userRepository = userRepository;
@@ -93,8 +89,8 @@ public class RentalsServImpl implements RentalService {
 
 
     @Override
-    public List<RentalDTO> getAllRentals() {
-         return rentalsRepository.findAllAsDTO();
+    public List<Rentals> getAllRentals() {
+         return rentalsRepository.findAll();
     }
 
     @Override
