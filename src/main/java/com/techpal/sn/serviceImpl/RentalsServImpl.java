@@ -1,6 +1,7 @@
 package com.techpal.sn.serviceImpl;
 
 import com.techpal.sn.dto.RentalDTO;
+import com.techpal.sn.exceptions.ReviewNotFoundException;
 import com.techpal.sn.models.Rentals;
 import com.techpal.sn.models.UserEntity;
 import com.techpal.sn.repository.RentalRepository;
@@ -19,12 +20,13 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class RentalsServImpl implements RentalService {
@@ -120,23 +122,22 @@ public class RentalsServImpl implements RentalService {
 
     @Override
     public String saveImage(MultipartFile imageFile) throws IOException {
-        // Générez un nom de fichier unique en utilisant UUID
-        String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
 
-        // Assurez-vous que le répertoire de téléchargement existe, sinon créez-le
         File uploadDirectory = new File(imageUploadPath);
         if (!uploadDirectory.exists()) {
             uploadDirectory.mkdirs();
         }
+        try {
+            Path paths = Paths.get(imageUploadPath).toAbsolutePath().normalize();
+            Path targetLocation = paths.resolve(Objects.requireNonNull(imageFile.getOriginalFilename()));
 
-        // Créez le chemin complet du fichier
-        Path imagePath = Path.of(imageUploadPath, fileName);
+            Files.copy(imageFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-        // Copiez le contenu du fichier téléchargé vers le répertoire de stockage
-        Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
+            return "http://localhost:8080/api/" + imageUploadPath + "/" + imageFile.getOriginalFilename();
+        } catch (IOException e) {
+            throw  new ReviewNotFoundException("Could not store file " + imageFile.getOriginalFilename() + ". Please try again!");
+        }
 
-        // Retournez l'URL de l'image stockée
-        return imageUploadPath + fileName; // Vous pouvez ajuster l'URL selon votre structure de serveur
     }
 
 }

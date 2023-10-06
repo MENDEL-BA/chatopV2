@@ -42,15 +42,6 @@ CREATE TABLE IF NOT EXISTS messages (
   FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS rental_user_messages (
-  rental_id INT,
-  user_id INT,
-  message_id INT,
-  PRIMARY KEY (rental_id, user_id, message_id),
-  FOREIGN KEY (rental_id) REFERENCES rentals (id),
-  FOREIGN KEY (user_id) REFERENCES users (id),
-  FOREIGN KEY (message_id) REFERENCES messages (id)
-);
 
 -- Insertion des rôles par défaut
 INSERT INTO roles (name) VALUES ('ROLE_USER');
