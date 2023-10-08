@@ -122,7 +122,7 @@ public class RentalsServImpl implements RentalService {
 
     @Override
     public String saveImage(MultipartFile imageFile) throws IOException {
-
+        //String imageUploadPath = new ClassPathResource("static/image").getFile().getAbsolutePath();
         File uploadDirectory = new File(imageUploadPath);
         if (!uploadDirectory.exists()) {
             uploadDirectory.mkdirs();
@@ -130,7 +130,6 @@ public class RentalsServImpl implements RentalService {
         try {
             Path paths = Paths.get(imageUploadPath).toAbsolutePath().normalize();
             Path targetLocation = paths.resolve(Objects.requireNonNull(imageFile.getOriginalFilename()));
-
             Files.copy(imageFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             return "http://localhost:8080/api/" + imageUploadPath + "/" + imageFile.getOriginalFilename();
